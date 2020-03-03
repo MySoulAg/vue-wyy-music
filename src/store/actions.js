@@ -1,10 +1,22 @@
 export default {
-    acyncupdata1({commit},msg) {
-        window.setTimeout(()=>{
-            commit('updata1',msg)
-        },1000)
+    /**修改播放状态 */
+    asyncSetPlayingState({
+        commit
+    }, playingState) {
+        commit('setPlayingState', playingState)
     },
-    asyncupdata2(fre) {
-        console.log(fre)
+
+    /**修改当前播放时间 */
+    asyncSetCurrentTime({
+        commit
+    }, currentTime) {
+        commit('setCurrentTime', currentTime)
+    },
+
+    /**修改播放器元素 */
+    asyncSetAudioEle({
+        commit
+    }, audioEle) {
+        commit("setAudioEle", audioEle)
     }
 }

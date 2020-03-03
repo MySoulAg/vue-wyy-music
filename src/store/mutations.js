@@ -1,8 +1,16 @@
 export default {
-    updata1(state, msg) {
-        state.test1 += msg
+    /**修改播放状态 */
+    setPlayingState(state, playingState) {
+        state.isPlaying = playingState
     },
-    updata2(state, msg) {
-        state.test2 += msg
+
+    /**修改当前播放时间 */
+    setCurrentTime(state, currentTime) {
+        state.currentTime = currentTime
+    },
+
+    /**修改播放器元素 */
+    setAudioEle(state, audioEle) {
+        state.audioEle = audioEle
     }
 }

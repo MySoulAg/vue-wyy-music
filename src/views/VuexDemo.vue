@@ -1,43 +1,40 @@
 <template>
   <div>
-    <p>{{test1}}{{test2}}</p>
-    <p>{{getTest1}}{{getTest2}}</p>
-    <button @click="fun1">同步修改1</button>
-    <button @click="fun2">同步修改2</button>
-    <br />
-    <button @click="fun3">异步修改1</button>
-    <button @click="fun4">异步修改2</button>
+    <div class="logo">
+    <img class="Rotation img" src="http://cdn.jingqueyun.com/turntable/image/theme/theme2/turntable-outer-bg2.png" width="128" height="128"/>
+</div>
   </div>
 </template>
 <script>
-import { mapState, mapGetters, mapMutations,mapActions } from "vuex";
+
 export default {
-  computed: {
-    ...mapState(["test1", "test2"]),
-    ...mapGetters(["getTest1", "getTest2"])
-  },
+  
 
-  methods: {
-    ...mapMutations(["updata1", "updata2"]),
-    ...mapActions(["acyncupdata1", "asyncupdata2"]),
-    fun1() {
-      this.updata1("同步修改1");
-    },
-
-    fun2() {
-      this.updata2("同步修改2");
-    },
-
-    fun3() {
-      this.acyncupdata1("异步修改1");
-    },
-
-    fun4() {
-      this.asyncupdata2("异步修改2");
-    }
-  }
 };
 </script>
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+.logo {
+            text-align: center;
+            margin-top: 100px;
+        }
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
 
+        .Rotation {
+            -webkit-transform: rotate(360deg);
+            animation: rotation 40s linear infinite;
+            -moz-animation: rotation 40s linear infinite;
+            -webkit-animation: rotation 40s linear infinite;
+            -o-animation: rotation 40s linear infinite;
+        }
+
+        .img {
+            border-radius: 200px;
+        }
 </style>
