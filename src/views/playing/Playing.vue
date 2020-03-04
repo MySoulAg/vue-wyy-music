@@ -128,7 +128,7 @@ export default {
     currentIndex: {
       handler(value) {
         this.$nextTick(() => {
-          console.log(this.initLyricsPosition);
+          // console.log(this.initLyricsPosition);
           this.$refs.ulRef.style.transform = `translateY(${-(
             value * 35 -
             this.initLyricsPosition / 2
@@ -257,6 +257,8 @@ article {
     margin-top: 20px;
     height: 50px;
     h3 {
+      margin: 0 auto;
+      width: 80%;
       text-align: center;
       font-size: 18px;
       font-weight: bold;
@@ -284,6 +286,8 @@ article {
         transform: translateY(50%);
         transition: all 0.8s;
         li {
+          margin: 0 auto;
+          width: 80%;
           text-align: center;
           padding: 8px 0;
         }
