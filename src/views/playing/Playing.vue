@@ -7,14 +7,32 @@
         <h3>{{musicName}}</h3>
         <p>{{authorName}}</p>
       </header>
-      <main>
-        <div class="pic" :class="[getIsPlaying?'rotation':'']" :style="{ backgroundImage: 'url(' + picUrl + ')' }"></div>
+      <main @click="isShowLyrics=!isShowLyrics">
+        <transition name="fade">
+          <div
+            v-show="!isShowLyrics"
+            class="pic"
+            :class="[getIsPlaying?'rotation':'']"
+            :style="{ backgroundImage: 'url(' + picUrl + ')' }"
+          ></div>
+        </transition>
+        <transition name="fade">
+          <div ref="lyricBoxRef" class="lyric-box" v-show="isShowLyrics">
+            <ul ref="ulRef">
+              <li
+                :class="[currentIndex==index?'activeLyric':'']"
+                v-for="(item,index) in lyricArr"
+                :key="index"
+              >{{item.text}}</li>
+            </ul>
+          </div>
+        </transition>
       </main>
       <footer>
         <div class="progress">
           <div class="currentTime">{{currentTime | format}}</div>
           <van-slider
-            step="1"
+            step="0.1"
             v-model="progressValue"
             inactive-color="#999"
             active-color="#fefefe"
@@ -43,7 +61,7 @@
 <script>
 import { Slider } from "vant";
 import { mapGetters, mapActions } from "vuex";
-import { format } from "@/utils/utils.js";
+import { format, parseLyric } from "@/utils/utils.js";
 import request from "@/api/index";
 export default {
   components: {
@@ -54,8 +72,14 @@ export default {
       progressValue: 0, //进度条的值
       totalTime: "", //歌曲总时间
       currentTime: 0, //播放歌曲的当前时间
+      nolyric: true, //是否无歌词
+      lyricArr: [], //歌词
+      currentIndex: 0, //当前播放的歌词下表
 
-      timeInterval:'',//定时器
+      isShowLyrics: false, //是否显示歌词
+      initLyricsPosition: 0, //初始化歌词位置
+
+      timeInterval: "", //定时器
 
       authorName: "", //作者
       musicName: "", //歌曲名
@@ -69,38 +93,98 @@ export default {
 
   created() {
     this.getMusicDetail();
+    this.getLyric();
   },
 
   computed: {
-    ...mapGetters(["getIsPlaying","getcurrentTime","getaudioEle"])
+    ...mapGetters(["getIsPlaying", "getcurrentTime", "getaudioEle"])
   },
 
-  watch:{
+  watch: {
     getIsPlaying: {
       handler(flag) {
         if (flag) {
-            this.timeInterval = window.setInterval(()=>{
-              console.log(this.getaudioEle.currentTime)
-              this.currentTime = Math.round(this.getaudioEle.currentTime)
-              this.progressValue = this.getaudioEle.currentTime * 100 / this.totalTime
-              if(this.getaudioEle.ended){
-                console.log('播放完毕')
-                window.clearInterval(this.timeInterval)
-                this.currentTime = 0;
-                this.progressValue = 0;
-                this.asyncSetPlayingState(false);
-              }
-            },1000)
-        }else {
-          window.clearInterval(this.timeInterval)
+          this.timeInterval = window.setInterval(() => {
+            // console.log(this.getaudioEle.currentTime);
+            this.currentTime = Math.round(this.getaudioEle.currentTime);
+            this.progressValue =
+              (this.getaudioEle.currentTime * 100) / this.totalTime;
+            this.lyricScroll(this.getaudioEle.currentTime);
+            if (this.getaudioEle.ended) {
+              console.log("播放完毕");
+              window.clearInterval(this.timeInterval);
+              this.currentTime = 0;
+              this.progressValue = 0;
+              this.asyncSetPlayingState(false);
+            }
+          }, 400);
+        } else {
+          window.clearInterval(this.timeInterval);
         }
       },
       immediate: true
     },
+
+    currentIndex: {
+      handler(value) {
+        this.$nextTick(() => {
+          console.log(this.initLyricsPosition);
+          this.$refs.ulRef.style.transform = `translateY(${-(
+            value * 35 -
+            this.initLyricsPosition / 2
+          )}px)`;
+        });
+      }
+      // immediate: true
+    },
+
+    isShowLyrics: {
+      handler(flag) {
+        if (flag) {
+          this.$nextTick(() => {
+            this.initLyricsPosition = this.$refs.lyricBoxRef.getBoundingClientRect().height;
+          });
+        }
+      }
+    },
+
+    getcurrentTime:{
+      handler(value){
+        console.log(value)
+        if(!this.getIsPlaying){
+          this.lyricScroll(value);
+        }
+      }
+    }
   },
 
   methods: {
-    ...mapActions(["asyncSetPlayingState","asyncSetCurrentTime"]),
+    ...mapActions(["asyncSetPlayingState", "asyncSetCurrentTime"]),
+
+    /**歌词滚动 */
+    lyricScroll(newTime) {
+      for (let i = 0, len = this.lyricArr.length; i < len; i++) {
+        if (newTime > this.lyricArr[i].time) {
+          this.currentIndex = i;
+          // return;
+        }
+      }
+      // console.log(this.currentIndex);
+    },
+
+    /**获取歌词 */
+    getLyric() {
+      request.getLyric(1400256289).then(res => {
+        console.log(res);
+        if (res.nolyric) {
+          this.nolyric = true;
+        } else {
+          this.nolyric = false;
+          this.lyricArr = parseLyric(res.lrc.lyric);
+        }
+        console.log(this.lyricArr);
+      });
+    },
 
     /**获取音乐详情 */
     getMusicDetail() {
@@ -121,26 +205,26 @@ export default {
     /**拖动进度条过程中 */
     progressInput(value) {
       console.log(value);
-      this.currentTime = this.totalTime / 100 * value
+      this.currentTime = (this.totalTime / 100) * value;
     },
 
     /**拖动进度条结束后 */
     progressChange(value) {
       console.log(value);
-      console.log(this.currentTime)
-      this.asyncSetCurrentTime(this.currentTime)
+      console.log(this.currentTime);
+      this.asyncSetCurrentTime(this.currentTime);
     },
 
     /**拖动结束 */
-    dargEnd(){
-      this.$refs.pointRef.style.width = '8px'
-      this.$refs.pointRef.style.height = '8px'
+    dargEnd() {
+      this.$refs.pointRef.style.width = "8px";
+      this.$refs.pointRef.style.height = "8px";
     },
 
     /**开始拖动 */
-    dargStart(){
-      this.$refs.pointRef.style.width = '15px'
-      this.$refs.pointRef.style.height = '15px'
+    dargStart() {
+      this.$refs.pointRef.style.width = "15px";
+      this.$refs.pointRef.style.height = "15px";
     }
   }
 };
@@ -184,14 +268,35 @@ article {
   }
 
   main {
-    flex: 1;
+    height: calc(100% - 186px);
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+
+    .lyric-box {
+      width: 100%;
+      height: 90%;
+      overflow-y: hidden;
+      ul {
+        width: 100%;
+        height: 100%;
+        transform: translateY(50%);
+        transition: all 0.8s;
+        li {
+          text-align: center;
+          padding: 8px 0;
+        }
+
+        li.activeLyric {
+          color: aqua;
+          font-size: 15px;
+        }
+      }
+    }
 
     .pic {
-      position: relative;
-      top: -20px;
+      position: absolute;
       width: 200px;
       height: 200px;
       //   background-color: aqua;
@@ -201,26 +306,34 @@ article {
     }
 
     @-webkit-keyframes rotation {
-            from {
-                -webkit-transform: rotate(0deg);
-            }
-            to {
-                -webkit-transform: rotate(360deg);
-            }
-        }
+      from {
+        -webkit-transform: rotate(0deg);
+      }
+      to {
+        -webkit-transform: rotate(360deg);
+      }
+    }
 
-        .rotation {
-            -webkit-transform: rotate(360deg);
-            animation: rotation 40s linear infinite;
-            -moz-animation: rotation 40s linear infinite;
-            -webkit-animation: rotation 40s linear infinite;
-            -o-animation: rotation 40s linear infinite;
-        }
+    .rotation {
+      -webkit-transform: rotate(360deg);
+      animation: rotation 40s linear infinite;
+      -moz-animation: rotation 40s linear infinite;
+      -webkit-animation: rotation 40s linear infinite;
+      -o-animation: rotation 40s linear infinite;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 1s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
   }
 
   footer {
     width: 100%;
-    padding-bottom: 10px;
+    padding: 20px 0 10px;
 
     .progress {
       display: flex;

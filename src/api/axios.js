@@ -32,7 +32,6 @@ axios.interceptors.response.use(
         }
     },
     error => {
-        console.log(1111)
         if (error.message.indexOf('timeout') != -1) {
             Toast('本次请求超时，请重试！')
         } else {
