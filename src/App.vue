@@ -4,15 +4,23 @@
     <audio
       ref="audioRef"
       preload
-      src="http://m7.music.126.net/20200303141259/7eb0ffe3a4aa1c93b4f4792d5718ebff/ymusic/545e/065a/530b/c413a59407100320b8f9da233b35f938.mp3"
+      autoplay
+      @play='startPlaying'
+      :src="songUrl"
     ></audio>
   </div>
 </template>
 <script>
 import { mapGetters,mapActions } from "vuex";
+import request from "@/api/index";
 export default {
+  data(){
+    return {
+      songUrl:'',//歌曲url
+    }
+  },
   computed: {
-    ...mapGetters(["getIsPlaying","getcurrentTime"])
+    ...mapGetters(["getIsPlaying","getcurrentTime","getSongId","getCurrentTabBar"])
   },
 
   watch: {
@@ -43,11 +51,35 @@ export default {
         }
       },
       immediate: true
+    },
+
+    getSongId:{
+      handler(value){
+        this.getSongUrl(value)
+        this.asyncSetCurrentTime(0);
+      }
     }
   },
 
+  updated(){
+    console.log(this.getCurrentTabBar)
+  },
+
   methods: {
-    ...mapActions(["asyncSetCurrentTime","asyncSetAudioEle"]),
+    ...mapActions(["asyncSetCurrentTime","asyncSetAudioEle","asyncSetPlayingState"]),
+
+    /**获取歌曲Url */
+    getSongUrl(id){
+      request.getSongUrl(id).then(res=>{
+        console.log(res)
+        this.songUrl = res.data[0].url
+      })
+    },
+
+    startPlaying(){
+      console.log('开始播放')
+      this.asyncSetPlayingState(true)
+    }
   }
 };
 </script>

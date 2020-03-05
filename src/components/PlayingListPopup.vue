@@ -1,0 +1,241 @@
+<template>
+  <van-popup
+    :overlay-style="overlayStyle"
+    @click-overlay="closePopup"
+    :close-on-click-overlay="false"
+    v-model="isShow"
+    position="bottom"
+    @closed="closedPopup"
+    :style="{ height: '75%' }"
+  >
+    <div class="warp">
+      <!-- <div class="button" @click="closePopup">关闭</div> -->
+      <van-swipe ref="swipeRef" :loop="false" initial-swipe="2" indicator-color="#fff">
+        <van-swipe-item>
+          <div class="historyList list-box">
+            <h5>历史播放</h5>
+            <ul>
+              <li>就一台空调遥控</li>
+              <li>突然间</li>
+              <li>热环境</li>
+              <li>就一台空调遥控</li>
+              <li>热霍比特人九年</li>
+              <li>虽然扽教育科</li>
+              <li>的天热家庭人均你</li>
+              <li>个太热九年</li>
+              <li>给他软件</li>
+              <li>惹的祸</li>
+            </ul>
+            <div class="button" @click="closePopup">关闭</div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="lastLis list-box">
+            <h5>上次播放</h5>
+            <ul>
+              <li>给他任何</li>
+              <li>突然间</li>
+              <li>热环境</li>
+              <li>就一台空调遥控</li>
+              <li>热霍比特人九年</li>
+              <li>虽然扽教育科</li>
+              <li>的天热家庭人均你</li>
+              <li>个太热九年</li>
+              <li>给他软件</li>
+              <li>惹的祸</li>
+            </ul>
+            <div class="button" @click="closePopup">关闭</div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="nowList list-box">
+            <h5>当前播放<span>(50)</span></h5>
+            <ul>
+              <li :class="[activeIndx==index?'active':'']" v-for="(item,index) in getCurrentSongList" :key="item.id">
+                  <van-icon v-if="activeIndx==index" class="activeInon" name="volume-o" />
+                <div class="left">
+                  <p>{{item.name}}</p>
+                  <span>-&nbsp;{{item.ar[0].name}}</span>
+                </div>
+                <van-icon @click="deleteSong(item.id)" name="cross" />
+              </li>
+            </ul>
+            <div class="button" @click="closePopup">关闭</div>
+          </div>
+        </van-swipe-item>
+      </van-swipe>
+    </div>
+  </van-popup>
+</template>
+<script>
+import { mapGetters } from "vuex";
+import { Popup, Swipe, SwipeItem, Icon,Toast  } from "vant";
+export default {
+  components: {
+    [Popup.name]: Popup,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+    [Icon.name]: Icon
+  },
+
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  data() {
+    return {
+      activeIndx:null,//正在播放的歌曲下标
+      overlayStyle: {
+        backgroundColor: "transparent"
+      }
+    };
+  },
+
+  created(){
+    this.getCurrentSongList.forEach((item,index) =>{
+            if(item.id==this.getSongId){
+                this.activeIndx = index
+            }
+        })
+  },
+
+  computed: {
+    ...mapGetters(["getCurrentSongList","getSongId"])
+  },
+
+  methods: {
+    /**删除当前播放列表的歌曲 */
+    deleteSong(item){
+      Toast("删除"+item)
+    },
+
+    /**点击关闭弹出层 */
+    closePopup() {
+      this.$emit("update:isShow", false);
+    },
+
+    /**弹出层关闭后触发 */
+    closedPopup() {
+      this.$refs.swipeRef.swipeTo(2);
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.van-popup {
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  color: #333;
+  .warp {
+    width: 100%;
+    // height: 95%;
+    // background-color: #fff;
+    // border-radius: 20px;
+  }
+
+  ::v-deep .van-swipe {
+    height: 100%;
+
+    .van-swipe__indicators {
+      top: 0px;
+      bottom: auto;
+    }
+
+    .van-swipe-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .list-box {
+        width: 90%;
+        height: 90%;
+        background-color: #fff;
+        border-radius: 20px;
+
+        h5 {
+          height: 40px;
+          padding: 0 15px;
+          line-height: 40px;
+          font-size: 18px;
+          font-weight: bold;
+          border-bottom: 1px solid #f5f5f5;
+          display:flex;
+          align-items: center;
+
+          span {
+            color:#999;
+            margin-left:5px;
+          }
+        }
+
+        ul {
+          padding: 0 15px;
+          height: calc(100% - 80px);
+          overflow-y: scroll;
+          li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .left {
+              flex: 1;
+              // display: flex;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+
+              p {
+                font-size: 16px;
+                display: inline-block;
+                // line-height: 16px;
+              }
+              span {
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.5);
+                margin-left: 3px;
+                padding-top: 3px;
+              }
+            }
+
+            .van-icon {
+              padding: 5px;
+              color: #999;
+            }
+
+            .activeInon {
+                padding-left: 0;
+                padding-right: 5px;
+                color: red;
+            }
+          }
+
+          li:last-of-type {
+            border-bottom: none;
+          }
+
+          li.active {
+              color: red;
+              span {
+                  color: red;
+              }
+          }
+
+        }
+
+        .button {
+          height: 40px;
+          text-align: center;
+          line-height: 40px;
+          border-top: 1px solid #f5f5f5;
+        }
+      }
+    }
+  }
+}
+</style>

@@ -18,13 +18,14 @@
         </transition>
         <transition name="fade">
           <div ref="lyricBoxRef" class="lyric-box" v-show="isShowLyrics">
-            <ul ref="ulRef">
+            <ul v-if="!nolyric" ref="ulRef">
               <li
                 :class="[currentIndex==index?'activeLyric':'']"
                 v-for="(item,index) in lyricArr"
                 :key="index"
               >{{item.text}}</li>
             </ul>
+            <div v-else class="noLyric">无歌词</div>
           </div>
         </transition>
       </main>
@@ -52,23 +53,27 @@
           <i class="iconfont icon-shangyiqu"></i>
           <i @click="playing" class="iconfont" :class="[getIsPlaying?'icon-bofang':'icon-zanting']"></i>
           <i class="iconfont icon-shangyiqu1"></i>
-          <i class="iconfont icon-liebiao"></i>
+          <i @click="isShow = !isShow" class="iconfont icon-liebiao"></i>
         </div>
       </footer>
     </div>
+    <PlayingListPopup :isShow.sync='isShow'></PlayingListPopup>
   </article>
 </template>
 <script>
 import { Slider } from "vant";
 import { mapGetters, mapActions } from "vuex";
 import { format, parseLyric } from "@/utils/utils.js";
+import PlayingListPopup from '@/components/PlayingListPopup'
 import request from "@/api/index";
 export default {
   components: {
-    [Slider.name]: Slider
+    [Slider.name]: Slider,
+    PlayingListPopup
   },
   data() {
     return {
+      isShow:false,//是否显示播放列表弹出层
       progressValue: 0, //进度条的值
       totalTime: "", //歌曲总时间
       currentTime: 0, //播放歌曲的当前时间
@@ -92,15 +97,25 @@ export default {
   },
 
   created() {
-    this.getMusicDetail();
-    this.getLyric();
+    
   },
 
   computed: {
-    ...mapGetters(["getIsPlaying", "getcurrentTime", "getaudioEle"])
+    ...mapGetters(["getIsPlaying", "getcurrentTime", "getaudioEle","getSongId"])
   },
 
   watch: {
+    getSongId:{
+      handler(value){
+        if(!value){
+          console.log('无播放');
+          return 
+        }
+        this.getMusicDetail(value);
+        this.getLyric(value);
+      },
+      immediate: true
+    },
     getIsPlaying: {
       handler(flag) {
         if (flag) {
@@ -116,6 +131,7 @@ export default {
               this.currentTime = 0;
               this.progressValue = 0;
               this.asyncSetPlayingState(false);
+              this.asyncSetSongId('')
             }
           }, 400);
         } else {
@@ -159,7 +175,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["asyncSetPlayingState", "asyncSetCurrentTime"]),
+    ...mapActions(["asyncSetPlayingState", "asyncSetCurrentTime","asyncSetSongId"]),
 
     /**歌词滚动 */
     lyricScroll(newTime) {
@@ -173,8 +189,8 @@ export default {
     },
 
     /**获取歌词 */
-    getLyric() {
-      request.getLyric(1400256289).then(res => {
+    getLyric(id) {
+      request.getLyric(id).then(res => {
         console.log(res);
         if (res.nolyric) {
           this.nolyric = true;
@@ -187,8 +203,8 @@ export default {
     },
 
     /**获取音乐详情 */
-    getMusicDetail() {
-      request.getMusicDetail(1400256289).then(res => {
+    getMusicDetail(id) {
+      request.getMusicDetail(id).then(res => {
         console.log(res);
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].al.name;
@@ -225,7 +241,7 @@ export default {
     dargStart() {
       this.$refs.pointRef.style.width = "15px";
       this.$refs.pointRef.style.height = "15px";
-    }
+    },
   }
 };
 </script>
@@ -296,6 +312,14 @@ article {
           color: aqua;
           font-size: 15px;
         }
+      }
+      
+      .noLyric {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
 
