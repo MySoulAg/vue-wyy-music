@@ -29,6 +29,11 @@ export default {
 
     /**修改当前播放的歌曲列表 */
     setCurrentSongList(state, currentSongList) {
-        state.currentSongList = currentSongList
+        if(typeof currentSongList == 'number'){
+            state.currentSongList.splice(currentSongList,1)
+        }else {
+            state.currentSongList = currentSongList
+        }
+        
     }
 }

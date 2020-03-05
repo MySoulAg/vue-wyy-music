@@ -51,6 +51,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .recommend-warp {
+  overflow-y: scroll;
   h5 {
     font-size: 20px;
     font-weight: bold;
@@ -59,7 +60,7 @@ export default {
     left: 0;
     top: 0;
     width: 100%;
-    background-color: #fff;
+    background-color: rgba(255,255,255,.9);
   }
 
   .container {

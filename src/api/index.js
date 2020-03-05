@@ -1,5 +1,7 @@
 import request from './axios'
 
+//userId:361753092
+
 export default {
 
     /**获取歌曲详情 */
@@ -29,6 +31,25 @@ export default {
         return request({
             method: 'get',
             url: '/personalized',
+        })
+    },
+
+    /**获取排行榜歌单 */
+    getRankingList() {
+        return request({
+            method: 'get',
+            url: '/toplist/detail',
+        })
+    },
+
+    /**获取我的歌单 */
+    getUserList(uid) {
+        return request({
+            method: 'get',
+            url: '/user/playlist',
+            params: {
+                uid
+            }
         })
     },
 

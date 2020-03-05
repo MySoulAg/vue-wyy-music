@@ -99,7 +99,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: #fff;
+    background-color: rgba(255,255,255,.9);
 
     .item {
       display: flex;
