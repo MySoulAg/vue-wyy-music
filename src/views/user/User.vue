@@ -1,63 +1,101 @@
 <template>
-    <div class="user-warp">
-        <h5>我的歌单 <span>欢迎：{{userName}}<img src="http://p1.music.126.net/UoKwQG0HA2hA2wd_tzJjBw==/18619129906800578.jpg"/></span></h5>
+  <div class="user-warp">
+    <h5>
+      我的歌单
+      <span>
+        欢迎：{{userName}}
+        <img :src="avatarUrl" />
+        
+      </span>
+      <button @click="logout">退出</button>
+    </h5>
+    
     <div class="container">
-      <div @click="goPlaylistDetail(item.id)" class="item" v-for="(item,index) in userList" :key="index">
+      
+      <div
+        @click="goPlaylistDetail(item.id)"
+        class="item"
+        v-for="(item,index) in userList"
+        :key="index"
+      >
         <div class="img" :style="{ backgroundImage: 'url(' + item.coverImgUrl + ')' }"></div>
         <p>{{item.name}}</p>
       </div>
       <div class="null"></div>
     </div>
+    
+    <!-- 虚化背景 -->
     <div ref="maskRef" class="mask"></div>
-    </div>
+  </div>
 </template>
 <script>
 import { mapActions } from "vuex";
 import request from "@/api/index";
 export default {
-    data() {
+  data() {
     return {
       userList: [], //我的歌单列表
-userName:'',//用户名
+      userName: "", //用户名
+      avatarUrl: "" //用户头像
     };
   },
 
-  created  () {
-    this.getUserList();
+  created() {
+    if (this.$route.query.flag) {
+      //从uid登录页面过来的
+      let temPlaylist = JSON.parse(window.sessionStorage.getItem("playlist"));
+      this.userList = temPlaylist;
+      this.avatarUrl = temPlaylist[0].creator.avatarUrl;
+      this.userName = temPlaylist[0].creator.nickname;
+    } else {
+      this.getUserList(
+        window.localStorage.getItem("userId") ||
+          window.localStorage.getItem("uId")
+      );
+    }
   },
-    activated  () {
+  activated() {
     this.asyncSetCurrentTabBar(4);
   },
-  mounted(){
-      console.log()
+  mounted() {
+    if (this.$route.query.flag) {
+      this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl})`;
+    }
   },
-    methods:{
-        ...mapActions(["asyncSetCurrentTabBar"]),
+  methods: {
+    ...mapActions(["asyncSetCurrentTabBar"]),
 
-         /**获取我的歌单 */
-    getUserList() {
-      request.getUserList(361753092).then(res => {
+    /**点击退出登录 */
+    logout() {
+      window.localStorage.removeItem("userId");
+      window.localStorage.removeItem("uId");
+    },
+
+    /**获取我的歌单 */
+    getUserList(id) {
+      request.getUserList(id).then(res => {
         console.log(res);
-        if (res && res.code == 200) {
+        if (res && res.code == 200 && res.playlist.length != 0) {
           this.userList = res.playlist;
-          this.$refs.maskRef.style.backgroundImage = `url(${res.playlist[0].creator.avatarUrl})`
-          this.userName = res.playlist[0].creator.nickname
+          this.avatarUrl = res.playlist[0].creator.avatarUrl;
+          this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl})`;
+          this.userName = res.playlist[0].creator.nickname;
         }
       });
     },
 
     /**点击歌单 去歌单详情 */
-    goPlaylistDetail(id){
-      console.log(id)
-      this.$router.push({path:'playlistDetail',query:{id}})
+    goPlaylistDetail(id) {
+      console.log(id);
+      this.$router.push({ path: "playlistDetail", query: { id } });
     }
-    }
-}
+  }
+};
 </script>
 <style lang="scss" scoped>
 .user-warp {
-    overflow-y: scroll;
-    color:#fff;
+  overflow-y: scroll;
+  color: #fff;
   h5 {
     font-size: 20px;
     font-weight: bold;
@@ -66,16 +104,16 @@ userName:'',//用户名
     left: 0;
     top: 0;
     width: 100%;
-    background-color: rgba(255,255,255,.5);
+    background-color: rgba(255, 255, 255, 0.5);
 
-    display:flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
 
     img {
-        width:30px;
-            border-radius: 50%;
-            margin-left:10px;
+      width: 30px;
+      border-radius: 50%;
+      margin-left: 10px;
     }
   }
 
@@ -112,12 +150,8 @@ userName:'',//用户名
         margin-bottom: 15px;
         text-align: justify;
         overflow: hidden;
-        /* text-overflow: ellipsis; */
-        /* //作为弹性伸缩盒子模型显示。 */
         display: -webkit-box;
-        /* //设置伸缩盒子的子元素排列方式--从上到下垂直排列 */
         -webkit-box-orient: vertical;
-        /* //显示的行，文本超出 显示几行 */
         -webkit-line-clamp: 2;
         font-size: 11px;
       }
@@ -130,15 +164,15 @@ userName:'',//用户名
   }
 
   .mask {
-      width:100vw;
-      height:100vh;
-      position:fixed;
-      left:0;
-      top:0;
-      z-index:-1;
-      background-size: cover;
-  background-position: center;
-  filter: blur(30px);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    filter: blur(30px);
   }
 }
 </style>

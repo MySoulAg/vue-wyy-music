@@ -8,8 +8,10 @@ const Recommend = () => import('@/views/recommend/Recommend') //推荐
 const Ranking = () => import('@/views/ranking/Ranking') //排行
 const Playing = () => import('@/views/playing/Playing') //播放
 const User = () => import('@/views/user/User') //我的
+const Login = () => import('@/views/user/Login') //登录
 
 const PlaylistDetail = () => import('@/views/playlistDetail/PlaylistDetail') //歌单详情
+
 
 Vue.use(VueRouter)
 
@@ -50,6 +52,7 @@ const routes = [{
           keepAlive: false // 需要缓存
         }
       },
+      
     ]
   },
   {
@@ -58,6 +61,14 @@ const routes = [{
     component: Playing,
     meta: {
       keepAlive: true // 需要缓存
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      keepAlive: false // 需要缓存
     }
   },
   {

@@ -34,6 +34,8 @@ axios.interceptors.response.use(
     error => {
         if (error.message.indexOf('timeout') != -1) {
             Toast('本次请求超时，请重试！')
+        } else if (error.message.indexOf('503') != -1) {
+            return Promise.reject(error);
         } else {
             Toast('系统请求异常')
         }

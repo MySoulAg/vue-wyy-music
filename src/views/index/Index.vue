@@ -1,9 +1,9 @@
 <template>
   <div class="index">
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"/>
+      <router-view v-if="$route.meta.keepAlive" />
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"/>
+    <router-view v-if="!$route.meta.keepAlive" />
     <div class="tabBar">
       <div class="item" :class="[actveTabBar==1?'active':'']" @click="goRecommend">
         <i class="iconfont icon-logo-dark"></i>
@@ -25,23 +25,22 @@
   </div>
 </template>
 <script>
-import { mapGetters,mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {
-    };
+    return {};
   },
 
   computed: {
     ...mapGetters(["getCurrentTabBar"]),
 
-    actveTabBar(){
-      return this.getCurrentTabBar[this.getCurrentTabBar.length-1]
+    actveTabBar() {
+      return this.getCurrentTabBar[this.getCurrentTabBar.length - 1];
     }
   },
 
-  mounted(){
-    console.log(this.actveTabBar,88888)
+  mounted() {
+    console.log(this.actveTabBar, 88888);
   },
 
   methods: {
@@ -61,7 +60,6 @@ export default {
         return;
       }
       this.$router.push("/ranking");
-      
     },
 
     /**点击播放 */
@@ -78,8 +76,14 @@ export default {
       if (this.actveTabBar == 4) {
         return;
       }
-      this.$router.push("/user");
-      
+      if (
+        window.localStorage.getItem("userId") ||
+        window.localStorage.getItem("uId")
+      ) {
+        this.$router.push("/user");
+      } else {
+        this.$router.push("/login");
+      }
     }
   }
 };
@@ -99,7 +103,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: rgba(255,255,255,.9);
+    background-color: rgba(255, 255, 255, 0.9);
 
     .item {
       display: flex;

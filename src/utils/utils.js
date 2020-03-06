@@ -31,3 +31,12 @@ export function parseLyric(lrc) {
     }
     return lyric
 }
+
+//验证手机号码
+export function checkPhone(num) {
+    if (/^1\d{10}$/.test(num)) {
+        return true;
+    } else {
+        return false;
+    }
+}

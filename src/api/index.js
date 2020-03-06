@@ -73,5 +73,51 @@ export default {
                 id
             }
         })
+    },
+
+    /**检测手机号码是否已经注册 */
+    checkCellphone(phone) {
+        return request({
+            method: 'get',
+            url: '/cellphone/existence/check',
+            params: {
+                phone
+            }
+        })
+    },
+
+    /**手机号码登录 */
+    loginByPhone(phone, password) {
+        return request({
+            method: 'get',
+            url: '/login/cellphone',
+            params: {
+                phone,
+                password
+            }
+        })
+    },
+
+    /**获取验证码 */
+    getCaptcha(phone) {
+        return request({
+            method: 'get',
+            url: '/captcha/sent',
+            params: {
+                phone
+            }
+        })
+    },
+
+    /**校验验证码是否正确 */
+    checkCaptcha(phone, captcha) {
+        return request({
+            method: 'get',
+            url: '/captcha/verify',
+            params: {
+                phone,
+                captcha
+            }
+        })
     }
 }
