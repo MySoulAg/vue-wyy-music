@@ -207,7 +207,7 @@ export default {
       request.getMusicDetail(id).then(res => {
         console.log(res);
         this.authorName = res.songs[0].ar[0].name;
-        this.musicName = res.songs[0].al.name;
+        this.musicName = res.songs[0].name;
         this.picUrl = res.songs[0].al.picUrl;
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });
