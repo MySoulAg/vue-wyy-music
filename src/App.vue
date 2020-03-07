@@ -5,19 +5,29 @@
       ref="audioRef"
       :loop="getPlayingType.type==1?true:false"
       @canplaythrough="canPlayThrough"
+      autoplay
+      preload
       @ended="playingEnded"
       :src="songUrl"
+      @error="handleError"
+      @loadstart="loadStart"
     ></audio>
+    <van-loading v-show="isShowLoading" type="spinner" color="#FE912A"/>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 import request from "@/api/index";
-import { Toast } from "vant";
+import { Toast,Loading  } from "vant";
 export default {
+  components:{
+    [Loading.name]:Loading
+  },
+
   data() {
     return {
-      songUrl: "" //歌曲url
+      songUrl: "", //歌曲url
+      isShowLoading:false,//是否显示loading
     };
   },
   computed: {
@@ -64,6 +74,7 @@ export default {
 
     getSongId: {
       handler(value) {
+        this.isShowLoading = true;
         this.asyncSetCurrentTime(0);
         this.asyncSetPlayingState(false);
         this.getSongUrl(value);
@@ -86,6 +97,19 @@ export default {
       // Toast("能够播放了");
       this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
+      this.isShowLoading = false;
+      console.log('加载结束')
+    },
+
+    /**加载错误时 */
+    handleError(){
+      // Toast('歌曲加载错误')
+    },
+
+    /**开始加载时 */
+    loadStart(){
+      
+      console.log('开始加载')
     },
 
     /**播放结束触发 */
@@ -141,5 +165,13 @@ export default {
   width: 100%;
   height: 100%;
   color: #fff;
+}
+
+.van-loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 9999;
 }
 </style>

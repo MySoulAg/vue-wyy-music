@@ -9,7 +9,7 @@ import {
 
 
 axios.defaults.timeout = 10000 //请求超时时间
-// axios.defaults.baseURL = 'http://49.235.193.247:3000/'
+axios.defaults.baseURL = 'http://49.235.193.247:3000/'
 
 /**请求拦截器 */
 axios.interceptors.request.use(
