@@ -137,6 +137,7 @@ export default {
           console.log("无播放");
           return;
         } else {
+          this.asyncSetCurrentTime(0);
           this.getMusicDetail(this.getSongId);
           this.getLyric(this.getSongId);
         }

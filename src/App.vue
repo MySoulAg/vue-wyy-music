@@ -41,10 +41,9 @@ export default {
           });
         } else {
           this.$nextTick(() => {
-            if(this.getcurrentTime!=0){
+            // if(this.getcurrentTime!=0){
               this.asyncSetCurrentTime(this.$refs.audioRef.currentTime);
-            }
-            
+            // }
             this.$refs.audioRef.pause();
           });
         }
@@ -84,7 +83,7 @@ export default {
     ]),
 
     canPlayThrough() {
-      Toast("能够播放了");
+      // Toast("能够播放了");
       this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
     },
