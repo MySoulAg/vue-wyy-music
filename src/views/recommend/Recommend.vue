@@ -3,7 +3,7 @@
     <h5>精选歌单</h5>
     <div class="container">
       <div @click="goPlaylistDetail(item.id)" class="item" v-for="(item,index) in recommendedList" :key="index">
-        <div class="img" :style="{ backgroundImage: 'url(' + item.picUrl + ')' }"></div>
+        <div class="img" :style="{ backgroundImage: 'url(' + item.picUrl + '?param=200y200)' }"></div>
         <p>{{item.name}}</p>
       </div>
       <div class="null"></div>

@@ -4,7 +4,7 @@
       我的歌单
       <span>
         欢迎：{{userName}}
-        <img :src="avatarUrl" />
+        <img :src="avatarUrl+'?param=50y50'" />
         <span>
           退出
           <span></span>
@@ -20,7 +20,7 @@
         v-for="(item,index) in userList"
         :key="index"
       >
-        <div class="img" :style="{ backgroundImage: 'url(' + item.coverImgUrl + ')' }"></div>
+        <div class="img" :style="{ backgroundImage: 'url(' + item.coverImgUrl + '?param=200y200)' }"></div>
         <p>{{item.name}}</p>
       </div>
       <div class="null"></div>
@@ -61,7 +61,7 @@ export default {
   },
   mounted() {
     if (this.$route.query.flag) {
-      this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl})`;
+      this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl+'?param=200y200'})`;
     }
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
         if (res && res.code == 200 && res.playlist.length != 0) {
           this.userList = res.playlist;
           this.avatarUrl = res.playlist[0].creator.avatarUrl;
-          this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl})`;
+          this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl+'?param=200y200'})`;
           this.userName = res.playlist[0].creator.nickname;
         }
       });

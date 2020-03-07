@@ -4,9 +4,7 @@
     <audio
       ref="audioRef"
       :loop="getPlayingType.type==1?true:false"
-      @play="startPlaying"
-      @canplaythrough="canPlay"
-      @loadstart="loadStart"
+      @canplaythrough="canPlayThrough"
       :src="songUrl"
     ></audio>
   </div>
@@ -80,13 +78,10 @@ export default {
       "asyncRandomSong"
     ]),
 
-    canPlay() {
+    canPlayThrough() {
       Toast("能够播放了");
+      this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
-    },
-
-    loadStart(){
-      Toast("开始加载了");
     },
 
     /**获取歌曲Url */
@@ -112,11 +107,6 @@ export default {
         }
       });
     },
-
-    startPlaying() {
-      console.log("开始播放");
-      this.asyncSetPlayingState(true);
-    }
   }
 };
 </script>

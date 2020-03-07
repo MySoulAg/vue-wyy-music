@@ -22,12 +22,13 @@
         confirm-button-color="#FE2738"
         @cancel="isShowUid=false"
         @confirm="loginByUid"
+        @opened="openedDialog"
         v-model="isShowUidDialog"
         show-cancel-button
         :before-close="beforeClose"
       >
         <div class="input">
-          <input type="number" v-model="uid" placeholder="请输入网易云的UID" />
+          <input ref="uIdRef" type="number" v-model="uid" placeholder="请输入网易云的UID" />
         </div>
       </van-dialog>
     </van-popup>
@@ -347,6 +348,12 @@ export default {
     /**uid的弹出层 开启后 触发 */
     uidOpened() {
       this.isShowUidDialog = true;
+
+    },
+
+    /**uid的 dialog弹出后 触发*/
+    openedDialog(){
+      this.$refs.uIdRef.focus();
     }
   }
 };

@@ -1,13 +1,13 @@
 <template>
   <div class="playlist-detail">
-    <div class="background-img" :style="{ backgroundImage: 'url(' + coverImgUrl + ')' }"></div>
+    <div class="background-img" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div>
     <div class="wrap">
       <header>
-        <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + ')' }"></div>
+        <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div>
         <div class="right">
           <h5>{{name}}</h5>
           <div class="author">
-            <img :src="avatarUrl" alt />
+            <img :src="avatarUrl+'?param=50y50'" alt />
             <span>{{nickname}}</span>
           </div>
           <p>{{description}}</p>
