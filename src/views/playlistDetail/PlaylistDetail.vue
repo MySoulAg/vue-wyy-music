@@ -18,8 +18,8 @@
       </header>
       <div class="list-box">
         <div class="title">
-          <i class="iconfont icon-zanting"></i>
-          <p>全部播放</p>
+          <i @click="goPlayingAll" class="iconfont icon-zanting"></i>
+          <p @click="goPlayingAll">全部播放</p>
           <span>(共{{songList.length}}首)</span>
         </div>
         <ul class="song-list">
@@ -99,6 +99,13 @@ export default {
     /**点击列表 跳 播放 */
     goPlaying(id) {
       this.asyncSetSongId(id);
+      this.asyncSetCurrentSongList(this.songList);
+      this.$router.push("/playing");
+    },
+
+    /**点击全部播放 */
+    goPlayingAll(){
+      this.asyncSetSongId(this.songList[0].id);
       this.asyncSetCurrentSongList(this.songList);
       this.$router.push("/playing");
     }
