@@ -5,13 +5,15 @@
       <span>
         欢迎：{{userName}}
         <img :src="avatarUrl" />
-        
+        <span>
+          退出
+          <span></span>
+        </span>
       </span>
-      <button @click="logout">退出</button>
+      <!-- <button @click="logout">退出</button> -->
     </h5>
-    
+
     <div class="container">
-      
       <div
         @click="goPlaylistDetail(item.id)"
         class="item"
@@ -23,7 +25,7 @@
       </div>
       <div class="null"></div>
     </div>
-    
+
     <!-- 虚化背景 -->
     <div ref="maskRef" class="mask"></div>
   </div>
@@ -110,10 +112,37 @@ export default {
     justify-content: space-between;
     align-items: center;
 
-    img {
-      width: 30px;
-      border-radius: 50%;
-      margin-left: 10px;
+    span {
+      position: relative;
+
+      img {
+        width: 30px;
+        border-radius: 50%;
+        margin-left: 10px;
+      }
+
+      span {
+        position: absolute;
+        bottom: -35px;
+        right: -3px;
+        padding: 2px 5px;
+        background-color: rgb(202, 199, 13);
+        border-radius: 5px;
+        font-size: 16px;
+
+        span {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          background-color: rgb(202, 199, 13);
+          position: absolute;
+          left: 50%;
+          top: 0;
+          transform: rotate(45deg) translateX(-50%);
+          border-radius: 0px;
+          padding: 0;
+        }
+      }
     }
   }
 

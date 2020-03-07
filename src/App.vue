@@ -3,24 +3,32 @@
     <router-view />
     <audio
       ref="audioRef"
-      preload
-      autoplay
-      @play='startPlaying'
+      :loop="getPlayingType.type==1?true:false"
+      @play="startPlaying"
+      @canplaythrough="canPlay"
+      @loadstart="loadStart"
       :src="songUrl"
     ></audio>
   </div>
 </template>
 <script>
-import { mapGetters,mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import request from "@/api/index";
+import { Toast } from "vant";
 export default {
-  data(){
+  data() {
     return {
-      songUrl:'',//歌曲url
-    }
+      songUrl: "" //歌曲url
+    };
   },
   computed: {
-    ...mapGetters(["getIsPlaying","getcurrentTime","getSongId","getCurrentTabBar"])
+    ...mapGetters([
+      "getIsPlaying",
+      "getcurrentTime",
+      "getSongId",
+      "getCurrentTabBar",
+      "getPlayingType"
+    ])
   },
 
   watch: {
@@ -28,13 +36,13 @@ export default {
       handler(flag) {
         if (flag) {
           this.$nextTick(() => {
-            this.$refs.audioRef.currentTime = this.getcurrentTime
+            this.$refs.audioRef.currentTime = this.getcurrentTime;
             this.$refs.audioRef.play();
-            this.asyncSetAudioEle(this.$refs.audioRef)
+            this.asyncSetAudioEle(this.$refs.audioRef);
           });
         } else {
           this.$nextTick(() => {
-              this.asyncSetCurrentTime(this.$refs.audioRef.currentTime)
+            this.asyncSetCurrentTime(this.$refs.audioRef.currentTime);
             this.$refs.audioRef.pause();
           });
         }
@@ -45,7 +53,7 @@ export default {
       handler() {
         if (this.getIsPlaying) {
           this.$nextTick(() => {
-            this.$refs.audioRef.currentTime = this.getcurrentTime
+            this.$refs.audioRef.currentTime = this.getcurrentTime;
             this.$refs.audioRef.play();
           });
         }
@@ -53,32 +61,61 @@ export default {
       immediate: true
     },
 
-    getSongId:{
-      handler(value){
-        this.getSongUrl(value)
+    getSongId: {
+      handler(value) {
+        this.getSongUrl(value);
         this.asyncSetCurrentTime(0);
       }
     }
   },
 
-  updated(){
-    console.log(this.getCurrentTabBar)
-  },
-
   methods: {
-    ...mapActions(["asyncSetCurrentTime","asyncSetAudioEle","asyncSetPlayingState"]),
+    ...mapActions([
+      "asyncSetCurrentTime",
+      "asyncSetAudioEle",
+      "asyncSetPlayingState",
+      "asyncSetSongId",
+      "asyncSetMusicUrl",
+      "asyncOrderNextSong",
+      "asyncRandomSong"
+    ]),
 
-    /**获取歌曲Url */
-    getSongUrl(id){
-      request.getSongUrl(id).then(res=>{
-        console.log(res)
-        this.songUrl = res.data[0].url
-      })
+    canPlay() {
+      Toast("能够播放了");
+      this.$refs.audioRef.play();
     },
 
-    startPlaying(){
-      console.log('开始播放')
-      this.asyncSetPlayingState(true)
+    loadStart(){
+      Toast("开始加载了");
+    },
+
+    /**获取歌曲Url */
+    getSongUrl(id) {
+      request.getSongUrl(id).then(res => {
+        console.log(res);
+        if (res.data[0].url) {
+          this.songUrl = res.data[0].url;
+          this.asyncSetMusicUrl(res.data[0].url);
+          console.log("获取到了url地址");
+        } else {
+          Toast("该歌曲不可播放,已切换下一曲");
+          // this.asyncSetMusicUrl(null)
+          this.songUrl = "";
+          if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
+            //顺序的下一曲
+            this.asyncOrderNextSong();
+          }
+          if (this.getPlayingType.type == 2) {
+            //随机的下一曲
+            this.asyncRandomSong();
+          }
+        }
+      });
+    },
+
+    startPlaying() {
+      console.log("开始播放");
+      this.asyncSetPlayingState(true);
     }
   }
 };

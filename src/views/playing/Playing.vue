@@ -49,22 +49,22 @@
           <div class="totalTime">{{ totalTime | format}}</div>
         </div>
         <div class="icon">
-          <i class="iconfont icon-xunhuan-wangyiicon"></i>
-          <i class="iconfont icon-shangyiqu"></i>
+          <i @click="playingType" class="iconfont" :class="[getPlayingType.class]"></i>
+          <i @click="playingPrev" class="iconfont icon-shangyiqu"></i>
           <i @click="playing" class="iconfont" :class="[getIsPlaying?'icon-bofang':'icon-zanting']"></i>
-          <i class="iconfont icon-shangyiqu1"></i>
+          <i @click="playingNext" class="iconfont icon-shangyiqu1"></i>
           <i @click="isShow = !isShow" class="iconfont icon-liebiao"></i>
         </div>
       </footer>
     </div>
-    <PlayingListPopup :isShow.sync='isShow'></PlayingListPopup>
+    <PlayingListPopup :isShow.sync="isShow"></PlayingListPopup>
   </article>
 </template>
 <script>
-import { Slider } from "vant";
+import { Slider, Toast } from "vant";
 import { mapGetters, mapActions } from "vuex";
 import { format, parseLyric } from "@/utils/utils.js";
-import PlayingListPopup from '@/components/PlayingListPopup'
+import PlayingListPopup from "@/components/PlayingListPopup";
 import request from "@/api/index";
 export default {
   components: {
@@ -73,7 +73,7 @@ export default {
   },
   data() {
     return {
-      isShow:false,//是否显示播放列表弹出层
+      isShow: false, //是否显示播放列表弹出层
       progressValue: 0, //进度条的值
       totalTime: "", //歌曲总时间
       currentTime: 0, //播放歌曲的当前时间
@@ -96,23 +96,40 @@ export default {
     format
   },
 
-  created() {
-    
-  },
+  created() {},
 
   computed: {
-    ...mapGetters(["getIsPlaying", "getcurrentTime", "getaudioEle","getSongId"])
+    ...mapGetters([
+      "getIsPlaying",
+      "getcurrentTime",
+      "getaudioEle",
+      "getSongId",
+      "getPlayingType",
+      "getMusicUrl"
+    ])
   },
 
   watch: {
-    getSongId:{
-      handler(value){
-        if(!value){
-          console.log('无播放');
-          return 
+    getPlayingType: {
+      handler(value) {
+        if (value.type == 0) {
+          Toast("列表循环");
+        } else if (value.type == 1) {
+          Toast("单曲循环");
+        } else {
+          Toast("随机播放");
         }
-        this.getMusicDetail(value);
-        this.getLyric(value);
+      }
+    },
+    getMusicUrl: {
+      handler(value) {
+        if (!value) {
+          console.log("无播放");
+          return;
+        } else {
+          this.getMusicDetail(this.getSongId);
+          this.getLyric(this.getSongId);
+        }
       },
       immediate: true
     },
@@ -127,11 +144,25 @@ export default {
             this.lyricScroll(this.getaudioEle.currentTime);
             if (this.getaudioEle.ended) {
               console.log("播放完毕");
-              window.clearInterval(this.timeInterval);
-              this.currentTime = 0;
-              this.progressValue = 0;
+              // window.clearInterval(this.timeInterval);
+              // this.currentTime = 0;
+              // this.progressValue = 0;
               this.asyncSetPlayingState(false);
-              this.asyncSetSongId('')
+              // this.asyncSetSongId("");
+
+              let delayTiam = window.setTimeout(() => {
+                window.clearTimeout(delayTiam);
+                if (this.getPlayingType.type == 0) {
+                  //顺序的下一曲
+                  this.asyncSetPlayingState(true);
+                  this.asyncOrderNextSong();
+                }
+                if (this.getPlayingType.type == 2) {
+                  //随机的下一曲
+                  this.asyncSetPlayingState(true);
+                  this.asyncRandomSong();
+                }
+              }, 500);
             }
           }, 400);
         } else {
@@ -164,10 +195,10 @@ export default {
       }
     },
 
-    getcurrentTime:{
-      handler(value){
-        console.log(value)
-        if(!this.getIsPlaying){
+    getcurrentTime: {
+      handler(value) {
+        console.log(value);
+        if (!this.getIsPlaying) {
           this.lyricScroll(value);
         }
       }
@@ -175,7 +206,44 @@ export default {
   },
 
   methods: {
-    ...mapActions(["asyncSetPlayingState", "asyncSetCurrentTime","asyncSetSongId"]),
+    ...mapActions([
+      "asyncSetPlayingState",
+      "asyncSetCurrentTime",
+      "asyncSetSongId",
+      "asyncSetPlayingType",
+      "asyncOrderNextSong",
+      "asyncOrderPrevSong",
+      "asyncRandomSong"
+    ]),
+
+    /**点击上一曲 */
+    playingPrev() {
+      if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
+        //顺序的上一曲
+        this.asyncOrderPrevSong();
+      }
+      if (this.getPlayingType.type == 2) {
+        //随机的上一曲
+        this.asyncRandomSong();
+      }
+    },
+
+    /**点击下一曲 */
+    playingNext() {
+      if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
+        //顺序的下一曲
+        this.asyncOrderNextSong();
+      }
+      if (this.getPlayingType.type == 2) {
+        //随机的下一曲
+        this.asyncRandomSong();
+      }
+    },
+
+    /**点击播放模式 */
+    playingType() {
+      this.asyncSetPlayingType();
+    },
 
     /**歌词滚动 */
     lyricScroll(newTime) {
@@ -194,6 +262,7 @@ export default {
         console.log(res);
         if (res.nolyric) {
           this.nolyric = true;
+          this.lyricArr = [];
         } else {
           this.nolyric = false;
           this.lyricArr = parseLyric(res.lrc.lyric);
@@ -208,7 +277,7 @@ export default {
         console.log(res);
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].name;
-        this.picUrl = res.songs[0].al.picUrl;
+        this.picUrl = res.songs[0].al.picUrl + "?param=200y200";
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });
     },
@@ -241,7 +310,7 @@ export default {
     dargStart() {
       this.$refs.pointRef.style.width = "15px";
       this.$refs.pointRef.style.height = "15px";
-    },
+    }
   }
 };
 </script>
@@ -313,7 +382,7 @@ article {
           font-size: 15px;
         }
       }
-      
+
       .noLyric {
         width: 100%;
         height: 100%;

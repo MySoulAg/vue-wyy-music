@@ -181,8 +181,12 @@ export default {
               text-overflow: ellipsis;
 
               p {
+                max-width: 100%;
                 font-size: 16px;
                 display: inline-block;
+                white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
                 // line-height: 16px;
               }
               span {

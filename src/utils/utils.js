@@ -1,3 +1,5 @@
+
+
 // 补0函数
 export function addZero(s) {
     return s < 10 ? '0' + s : s
@@ -39,4 +41,15 @@ export function checkPhone(num) {
     } else {
         return false;
     }
+}
+
+//取两个整数之间，不包括某个整数的随机数
+export function getRandom(min, max, notInclude) {
+    let random = Math.floor(Math.random() * (max - min + 1)) + min
+    if (random != notInclude) {
+        return random
+    } else {
+        return getRandom(min, max, notInclude)
+    }
+
 }
