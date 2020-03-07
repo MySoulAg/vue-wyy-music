@@ -1,6 +1,6 @@
 <template>
   <article>
-    <div class="palyIng-bg" :style="{ backgroundImage: 'url(' + picUrl + ')' }"></div>
+    <div class="palyIng-bg" :style="{ backgroundImage: 'url(' + bgcPicUrl + ')' }"></div>
 
     <div class="palyIng-warp">
       <header>
@@ -88,7 +88,8 @@ export default {
 
       authorName: "", //作者
       musicName: "", //歌曲名
-      picUrl: "" //歌曲图片
+      picUrl: "", //歌曲图片
+      bgcPicUrl: "" //模糊背景图
     };
   },
 
@@ -110,6 +111,15 @@ export default {
   },
 
   watch: {
+    getSongId: {
+      handler() {
+        this.progressValue = 0;
+        this.currentTime = 0;
+        this.picUrl = "";
+        this.musicName = "";
+        this.authorName = "";
+      }
+    },
     getPlayingType: {
       handler(value) {
         if (value.type == 0) {
@@ -141,27 +151,7 @@ export default {
             this.progressValue =
               (this.getaudioEle.currentTime * 100) / this.totalTime;
             this.lyricScroll(this.getaudioEle.currentTime);
-            if (this.getaudioEle.ended) {
-              console.log("播放完毕");
-
-              this.asyncSetPlayingState(false);
-
-
-              let delayTiam = window.setTimeout(() => {
-                window.clearTimeout(delayTiam);
-                if (this.getPlayingType.type == 0) {
-                  //顺序的下一曲
-                  this.asyncSetPlayingState(true);
-                  this.asyncOrderNextSong();
-                }
-                if (this.getPlayingType.type == 2) {
-                  //随机的下一曲
-                  this.asyncSetPlayingState(true);
-                  this.asyncRandomSong();
-                }
-              }, 500);
-            }
-          }, 400);
+          }, 300);
         } else {
           window.clearInterval(this.timeInterval);
         }
@@ -275,6 +265,7 @@ export default {
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].name;
         this.picUrl = res.songs[0].al.picUrl + "?param=200y200";
+        this.bgcPicUrl = res.songs[0].al.picUrl + "?param=200y200";
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });
     },

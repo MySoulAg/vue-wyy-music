@@ -5,6 +5,7 @@
       ref="audioRef"
       :loop="getPlayingType.type==1?true:false"
       @canplaythrough="canPlayThrough"
+      @ended="playingEnded"
       :src="songUrl"
     ></audio>
   </div>
@@ -40,7 +41,10 @@ export default {
           });
         } else {
           this.$nextTick(() => {
-            this.asyncSetCurrentTime(this.$refs.audioRef.currentTime);
+            if(this.getcurrentTime!=0){
+              this.asyncSetCurrentTime(this.$refs.audioRef.currentTime);
+            }
+            
             this.$refs.audioRef.pause();
           });
         }
@@ -64,7 +68,6 @@ export default {
         this.asyncSetCurrentTime(0);
         this.asyncSetPlayingState(false);
         this.getSongUrl(value);
-        
       }
     }
   },
@@ -84,6 +87,27 @@ export default {
       Toast("能够播放了");
       this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
+    },
+
+    /**播放结束触发 */
+    playingEnded() {
+      console.log("播放结束了");
+
+      this.asyncSetPlayingState(false);
+
+      // let delayTiam = window.setTimeout(() => {
+      // window.clearTimeout(delayTiam);
+      if (this.getPlayingType.type == 0) {
+        //顺序的下一曲
+        this.asyncSetPlayingState(true);
+        this.asyncOrderNextSong();
+      }
+      if (this.getPlayingType.type == 2) {
+        //随机的下一曲
+        this.asyncSetPlayingState(true);
+        this.asyncRandomSong();
+      }
+      // }, 500);
     },
 
     /**获取歌曲Url */
@@ -108,7 +132,7 @@ export default {
           }
         }
       });
-    },
+    }
   }
 };
 </script>
