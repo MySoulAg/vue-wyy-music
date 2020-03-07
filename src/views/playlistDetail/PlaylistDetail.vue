@@ -1,6 +1,9 @@
 <template>
   <div class="playlist-detail">
-    <div class="background-img" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div>
+    <div
+      class="background-img"
+      :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"
+    ></div>
     <div class="wrap">
       <header>
         <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div>
@@ -43,7 +46,7 @@
   </div>
 </template>
 <script>
-import { mapGetters,mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { Icon } from "vant";
 import request from "@/api/index";
 export default {
@@ -53,7 +56,7 @@ export default {
 
   data() {
     return {
-        activeIndx:null,//正在播放的歌曲下标
+      activeIndx: null, //正在播放的歌曲下标
       coverImgUrl: "", //封面背景
       name: "", //歌单标题
       avatarUrl: "", //头像
@@ -67,15 +70,13 @@ export default {
     this.getPlaylistDetail(this.$route.query.id);
   },
 
-
   computed: {
     ...mapGetters(["getSongId"])
   },
 
   methods: {
+    ...mapActions(["asyncSetSongId", "asyncSetCurrentSongList"]),
 
-      ...mapActions(["asyncSetSongId","asyncSetCurrentSongList"]),
-      
     /**获取歌单详情 */
     getPlaylistDetail(id) {
       request.getPlaylistDetail(id).then(res => {
@@ -87,19 +88,19 @@ export default {
         this.description = res.playlist.description;
         this.songList = res.playlist.tracks;
 
-        this.songList.forEach((item,index) =>{
-            if(item.id==this.getSongId){
-                this.activeIndx = index
-            }
-        })
+        this.songList.forEach((item, index) => {
+          if (item.id == this.getSongId) {
+            this.activeIndx = index;
+          }
+        });
       });
     },
 
     /**点击列表 跳 播放 */
     goPlaying(id) {
+      this.asyncSetSongId(id);
+      this.asyncSetCurrentSongList(this.songList);
       this.$router.push("/playing");
-        this.asyncSetSongId(id);
-        this.asyncSetCurrentSongList(this.songList)
     }
   }
 };

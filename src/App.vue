@@ -61,8 +61,10 @@ export default {
 
     getSongId: {
       handler(value) {
-        this.getSongUrl(value);
         this.asyncSetCurrentTime(0);
+        this.asyncSetPlayingState(false);
+        this.getSongUrl(value);
+        
       }
     }
   },

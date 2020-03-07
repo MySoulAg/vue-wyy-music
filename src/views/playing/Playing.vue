@@ -137,18 +137,15 @@ export default {
       handler(flag) {
         if (flag) {
           this.timeInterval = window.setInterval(() => {
-            // console.log(this.getaudioEle.currentTime);
             this.currentTime = Math.round(this.getaudioEle.currentTime);
             this.progressValue =
               (this.getaudioEle.currentTime * 100) / this.totalTime;
             this.lyricScroll(this.getaudioEle.currentTime);
             if (this.getaudioEle.ended) {
               console.log("播放完毕");
-              // window.clearInterval(this.timeInterval);
-              // this.currentTime = 0;
-              // this.progressValue = 0;
+
               this.asyncSetPlayingState(false);
-              // this.asyncSetSongId("");
+
 
               let delayTiam = window.setTimeout(() => {
                 window.clearTimeout(delayTiam);

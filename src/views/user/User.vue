@@ -4,13 +4,14 @@
       我的歌单
       <span>
         欢迎：{{userName}}
-        <img :src="avatarUrl+'?param=50y50'" />
-        <span>
-          退出
-          <span></span>
-        </span>
+        <img @click="showButton" :src="avatarUrl+'?param=50y50'" />
+        <transition name="bounce">
+          <span @click="logout" v-show="isShowButton">
+            退出
+            <span></span>
+          </span>
+        </transition>
       </span>
-      <!-- <button @click="logout">退出</button> -->
     </h5>
 
     <div class="container">
@@ -20,7 +21,10 @@
         v-for="(item,index) in userList"
         :key="index"
       >
-        <div class="img" :style="{ backgroundImage: 'url(' + item.coverImgUrl + '?param=200y200)' }"></div>
+        <div
+          class="img"
+          :style="{ backgroundImage: 'url(' + item.coverImgUrl + '?param=200y200)' }"
+        ></div>
         <p>{{item.name}}</p>
       </div>
       <div class="null"></div>
@@ -38,7 +42,8 @@ export default {
     return {
       userList: [], //我的歌单列表
       userName: "", //用户名
-      avatarUrl: "" //用户头像
+      avatarUrl: "", //用户头像
+      isShowButton: false //是否显示退出按钮
     };
   },
 
@@ -61,16 +66,27 @@ export default {
   },
   mounted() {
     if (this.$route.query.flag) {
-      this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl+'?param=200y200'})`;
+      this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl +
+        "?param=200y200"})`;
     }
   },
   methods: {
     ...mapActions(["asyncSetCurrentTabBar"]),
 
+    /**点击头像 */
+    showButton() {
+      this.isShowButton = true;
+      let temTime = window.setTimeout(() => {
+        this.isShowButton = false;
+        window.clearTimeout(temTime);
+      }, 2000);
+    },
+
     /**点击退出登录 */
     logout() {
       window.localStorage.removeItem("userId");
       window.localStorage.removeItem("uId");
+      this.$router.push("/recommend");
     },
 
     /**获取我的歌单 */
@@ -80,7 +96,8 @@ export default {
         if (res && res.code == 200 && res.playlist.length != 0) {
           this.userList = res.playlist;
           this.avatarUrl = res.playlist[0].creator.avatarUrl;
-          this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl+'?param=200y200'})`;
+          this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl +
+            "?param=200y200"})`;
           this.userName = res.playlist[0].creator.nickname;
         }
       });
@@ -202,6 +219,24 @@ export default {
     background-size: cover;
     background-position: center;
     filter: blur(30px);
+  }
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
