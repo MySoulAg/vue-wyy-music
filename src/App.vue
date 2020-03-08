@@ -12,7 +12,7 @@
       @error="handleError"
       @loadstart="loadStart"
     ></audio>
-    <van-loading v-show="isShowLoading" type="spinner" color="#FE912A"/>
+    <van-loading v-show="isShowLoading" type="spinner" color="#1FFDFA"/>
   </div>
 </template>
 <script>

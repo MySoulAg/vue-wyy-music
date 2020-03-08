@@ -120,7 +120,7 @@ export default {
       handler() {
         this.progressValue = 0;
         this.currentTime = 0;
-        this.$refs.ulRef.style.transform = `translateY(177px)`;
+        this.$refs.ulRef.style.transform = `translateY(135px)`;
         this.lyricArr = [];
         this.picUrl = "";
         this.musicName = "";
@@ -187,7 +187,7 @@ export default {
         }
         this.$refs.ulRef.style.transform = `translateY(${-(
           this.scrollHeight -
-          177
+          135
         )}px)`;
       }
     },
@@ -351,7 +351,7 @@ article {
 
     .lyric-box {
       width: 100%;
-      height: 390px;
+      height: 310px;
       overflow-y: hidden;
       transition: all 1s;
       position: relative;
