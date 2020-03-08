@@ -3,7 +3,10 @@
     <h5>精选歌单</h5>
     <div class="container">
       <div @click="goPlaylistDetail(item.id)" class="item" v-for="(item,index) in recommendedList" :key="index">
-        <div class="img" :style="{ backgroundImage: 'url(' + item.picUrl + '?param=200y200)' }"></div>
+        <!-- <div class="img" :style="{ backgroundImage: 'url(' + item.picUrl + '?param=200y200)' }"></div> -->
+        <div class="img">
+          <img v-lazy="item.picUrl" alt="">
+        </div>
         <p>{{item.name}}</p>
       </div>
       <div class="null"></div>
@@ -82,9 +85,14 @@ export default {
         width: 100px;
         height: 100px;
         // background-color: royalblue;
-        border-radius: 6px;
-        background-size: cover;
-        background-position: center;
+        // border-radius: 6px;
+        // background-size: cover;
+        // background-position: center;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 6px;
+        }
       }
 
       p {

@@ -3,9 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import FastClick from "fastclick";
+import VueLazyload from 'vue-lazyload'
 
 
 import './assets/icon/iconfont.css' //字体图标
+
+Vue.use(VueLazyload,{
+  // error:require('@/assets/img/logo.png'),
+  loading:require('@/assets/img/loading.gif')
+})
 
 
 //解决ios移动端input调软键盘问题

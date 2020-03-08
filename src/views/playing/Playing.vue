@@ -26,10 +26,6 @@
               >{{item.text}}</li>
             </ul>
             <div v-else class="noLyric">无歌词</div>
-            <div class="masktop1"></div>
-            <div class="masktop2"></div>
-            <div class="maskbottom1"></div>
-            <div class="maskbottom2"></div>
           </div>
         </transition>
       </main>
@@ -101,7 +97,11 @@ export default {
     format
   },
 
-  created() {},
+  created() {
+    if(this.getCurrentSongList.length==0){
+      Toast("当前无播放")
+    }
+  },
 
   computed: {
     ...mapGetters([
@@ -110,7 +110,8 @@ export default {
       "getaudioEle",
       "getSongId",
       "getPlayingType",
-      "getMusicUrl"
+      "getMusicUrl",
+      "getCurrentSongList"
     ])
   },
 
@@ -140,7 +141,7 @@ export default {
     getMusicUrl: {
       handler(value) {
         if (!value) {
-          Toast("当前无播放");
+          // Toast("当前无播放");
           return;
         } else {
           this.asyncSetCurrentTime(0);
@@ -381,14 +382,6 @@ article {
         align-items: center;
       }
 
-      .masktop1 {
-        position: absolute;
-        width: 100%;
-        height: 35px;
-        left: 0;
-        top: 0;
-        filter: blur(5px);
-      }
     }
 
     .pic {
