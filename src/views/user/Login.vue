@@ -364,6 +364,7 @@ export default {
   flex-direction: column;
   // justify-content: space-around;
   align-items: center;
+  flex-shrink: 0;
 
   .logo-box {
     margin-top: 25%;

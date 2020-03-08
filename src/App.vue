@@ -1,10 +1,15 @@
 <template>
   <div id="app">
     <!-- <router-view /> -->
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive" />
-    </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" />
+    <transition :name="transitionName">
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" />
+      </keep-alive>
+    </transition>
+    <transition :name="transitionName">
+      <router-view v-if="!$route.meta.keepAlive" />
+    </transition>
+
     <audio
       ref="audioRef"
       :loop="getPlayingType.type==1?true:false"
@@ -16,22 +21,23 @@
       @error="handleError"
       @loadstart="loadStart"
     ></audio>
-    <van-loading v-show="isShowLoading" type="spinner" color="#1FFDFA"/>
+    <van-loading v-show="isShowLoading" type="spinner" color="#1FFDFA" />
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 import request from "@/api/index";
-import { Toast,Loading  } from "vant";
+import { Toast, Loading } from "vant";
 export default {
-  components:{
-    [Loading.name]:Loading
+  components: {
+    [Loading.name]: Loading
   },
 
   data() {
     return {
+      transitionName: "fade-left",
       songUrl: "", //歌曲url
-      isShowLoading:false,//是否显示loading
+      isShowLoading: false //是否显示loading
     };
   },
   computed: {
@@ -56,7 +62,7 @@ export default {
         } else {
           this.$nextTick(() => {
             // if(this.getcurrentTime!=0){
-              this.asyncSetCurrentTime(this.$refs.audioRef.currentTime);
+            this.asyncSetCurrentTime(this.$refs.audioRef.currentTime);
             // }
             this.$refs.audioRef.pause();
           });
@@ -102,18 +108,17 @@ export default {
       this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
       this.isShowLoading = false;
-      console.log('加载结束')
+      console.log("加载结束");
     },
 
     /**加载错误时 */
-    handleError(){
+    handleError() {
       // Toast('歌曲加载错误')
     },
 
     /**开始加载时 */
-    loadStart(){
-      
-      console.log('开始加载')
+    loadStart() {
+      console.log("开始加载");
     },
 
     /**播放结束触发 */
@@ -169,13 +174,38 @@ export default {
   width: 100%;
   height: 100%;
   color: #fff;
+
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .van-loading {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   z-index: 9999;
 }
+
+
+
+.fade-left-enter-active,
+.fade-left-leave-active {
+  transition: all .5s;
+}
+
+.fade-left-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
+}
+.fade-left-enter-to {
+  transform: translateX(-100%);
+  opacity: 1;
+}
+.fade-left-enter {
+  transform: translateX(-105%);
+  opacity: 0;
+}
+
 </style>

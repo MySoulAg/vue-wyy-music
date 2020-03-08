@@ -49,7 +49,7 @@ const routes = [{
         name: 'PlaylistDetail',
         component: PlaylistDetail,
         meta: {
-          keepAlive: false // 需要缓存
+          keepAlive: true // 需要缓存
         }
       },
       
@@ -68,7 +68,7 @@ const routes = [{
     name: 'Login',
     component: Login,
     meta: {
-      keepAlive: false // 需要缓存
+      keepAlive: true // 需要缓存
     }
   },
   {

@@ -1,9 +1,15 @@
 <template>
   <div class="index">
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive" />
-    </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" />
+    <transition :name="transitionName">
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" />
+      </keep-alive>
+    </transition>
+
+    <transition :name="transitionName">
+      <router-view v-if="!$route.meta.keepAlive" />
+    </transition>
+
     <div class="tabBar">
       <div class="item" :class="[actveTabBar==1?'active':'']" @click="goRecommend">
         <i class="iconfont icon-logo-dark"></i>
@@ -28,7 +34,9 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      transitionName: "fade-left"
+    };
   },
 
   computed: {
@@ -51,6 +59,11 @@ export default {
       if (this.actveTabBar == 1) {
         return;
       }
+      if (this.actveTabBar > 1) {
+        this.transitionName = "fade-right";
+      } else {
+        this.transitionName = "fade-left";
+      }
       this.$router.push("/recommend");
     },
 
@@ -58,6 +71,11 @@ export default {
     goRanking() {
       if (this.actveTabBar == 2) {
         return;
+      }
+      if (this.actveTabBar > 2) {
+        this.transitionName = "fade-right";
+      } else {
+        this.transitionName = "fade-left";
       }
       this.$router.push("/ranking");
     },
@@ -76,6 +94,11 @@ export default {
       if (this.actveTabBar == 4) {
         return;
       }
+      if (this.actveTabBar > 4) {
+        this.transitionName = "fade-right";
+      } else {
+        this.transitionName = "fade-left";
+      }
       if (
         window.localStorage.getItem("userId") ||
         window.localStorage.getItem("uId")
@@ -93,6 +116,11 @@ export default {
   width: 100%;
   height: 100%;
   color: #333;
+
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  flex-shrink: 0;
 
   .tabBar {
     position: fixed;
@@ -124,5 +152,43 @@ export default {
       color: red;
     }
   }
+}
+
+.fade-left-enter-active,
+.fade-left-leave-active {
+  transition: all 0.5s;
+}
+
+.fade-left-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
+}
+.fade-left-enter-to {
+  transform: translateX(-100%);
+  opacity: 1;
+}
+.fade-left-enter {
+  transform: translateX(-105%);
+  opacity: 0;
+}
+
+/////////////////
+
+.fade-right-enter-active,
+.fade-right-leave-active {
+  transition: all 0.5s;
+}
+
+.fade-right-leave-to {
+  transform: translateX(-50px);
+  opacity: 0;
+}
+.fade-right-enter-to {
+  transform: translateX(-100%);
+  opacity: 1;
+}
+.fade-right-enter {
+  transform: translateX(-95%);
+  opacity: 0;
 }
 </style>

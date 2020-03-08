@@ -1,62 +1,73 @@
 <template>
-    <div class="ranking-warp">
-        <h5>排行榜单</h5>
+  <div class="ranking-warp">
+    <h5>排行榜单</h5>
     <div class="container">
-      <div @click="goPlaylistDetail(item.id)" class="item" v-for="(item,index) in rankingList" :key="index">
+      <div
+        @click="goPlaylistDetail(item.id)"
+        class="item"
+        v-for="(item,index) in rankingList"
+        :key="index"
+      >
         <!-- <div class="img" :style="{ backgroundImage: 'url(' + item.coverImgUrl + '?param=200y200)' }"></div> -->
         <div class="img">
-          <img v-lazy="item.coverImgUrl" alt="">
+          <img v-lazy="item.coverImgUrl" alt />
         </div>
         <p>{{item.name}}</p>
       </div>
       <div class="null"></div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
 import { mapActions } from "vuex";
 import request from "@/api/index";
 export default {
-    data() {
+  data() {
     return {
       rankingList: [] //排行歌单列表
     };
   },
 
-  created  () {
+  created() {
     this.getRankingList();
-    console.log("created")
+    console.log("created");
   },
-    activated  () {
+  activated() {
     this.asyncSetCurrentTabBar(2);
-    console.log("activated")
-    this.rankingList = JSON.parse(window.sessionStorage.getItem('rankingList'))
+    console.log("activated");
+    this.rankingList = JSON.parse(window.sessionStorage.getItem("rankingList"));
   },
-    methods:{
-        ...mapActions(["asyncSetCurrentTabBar"]),
+  methods: {
+    ...mapActions(["asyncSetCurrentTabBar"]),
 
-        /**获取排行歌单 */
+    /**获取排行歌单 */
     getRankingList() {
       request.getRankingList().then(res => {
         console.log(res);
         if (res && res.code == 200) {
           this.rankingList = res.list;
-          window.sessionStorage.setItem('rankingList',JSON.stringify(res.list))
+          window.sessionStorage.setItem(
+            "rankingList",
+            JSON.stringify(res.list)
+          );
         }
       });
     },
 
     /**点击歌单 去歌单详情 */
-    goPlaylistDetail(id){
-      console.log(id)
-      this.$router.push({path:'playlistDetail',query:{id}})
+    goPlaylistDetail(id) {
+      console.log(id);
+      this.$router.push({ path: "playlistDetail", query: { id } });
     }
-    }
-}
+  }
+};
 </script>
 <style lang="scss" scoped>
 .ranking-warp {
-    overflow-y: scroll;
+  overflow-y: scroll;
+  flex-shrink: 0;
+  width: 100%;
+
   h5 {
     font-size: 20px;
     font-weight: bold;
@@ -65,7 +76,7 @@ export default {
     left: 0;
     top: 0;
     width: 100%;
-    background-color: rgba(255,255,255,.9);
+    background-color: rgba(255, 255, 255, 0.9);
   }
 
   .container {

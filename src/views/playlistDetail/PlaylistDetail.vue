@@ -1,72 +1,72 @@
 <template>
   <div class="playlist-detail">
     <div v-if="!isLoadingData">
-    <div
-      class="background-img"
-      :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"
-    ></div>
-    <div class="wrap">
-      <header>
-        <!-- <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div> -->
-        <div class="left">
-          <img v-lazy="coverImgUrl" alt="">
-        </div>
-        
-        <div class="right">
-          <h5>{{name}}</h5>
-          <div class="author">
-            <img :src="avatarUrl+'?param=50y50'" alt />
-            <span>{{nickname}}</span>
+      <div
+        class="background-img"
+        :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"
+      ></div>
+      <div class="wrap">
+        <header>
+          <!-- <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div> -->
+          <div class="left">
+            <img v-lazy="coverImgUrl" alt />
           </div>
-          <p>{{description}}</p>
-        </div>
-      </header>
-      <div class="list-box">
-        <div class="title">
-          <i @click="goPlayingAll" class="iconfont icon-zanting"></i>
-          <p @click="goPlayingAll">全部播放</p>
-          <span>(共{{songList.length}}首)</span>
-        </div>
-        <ul class="song-list">
-          <li
-            @click="goPlaying(item.id)"
-            :class="[activeIndx==index?'active':'']"
-            v-for="(item,index) in songList"
-            :key="item.id"
-          >
-            <van-icon v-if="activeIndx==index" class="number" name="volume-o" />
-            <div v-else class="number">{{index+1}}</div>
-            <div class="name">
-              <p>
-                {{item.name}}
-                <span v-if="item.alia[0]">({{item.alia[0]}})</span>
-              </p>
-              <span>{{item.ar[0].name}}&nbsp;-&nbsp;{{item.al.name}}</span>
+
+          <div class="right">
+            <h5>{{name}}</h5>
+            <div class="author">
+              <img :src="avatarUrl+'?param=50y50'" alt />
+              <span>{{nickname}}</span>
             </div>
-          </li>
-        </ul>
-        <div class="null"></div>
+            <p>{{description}}</p>
+          </div>
+        </header>
+        <div class="list-box">
+          <div class="title">
+            <i @click="goPlayingAll" class="iconfont icon-zanting"></i>
+            <p @click="goPlayingAll">全部播放</p>
+            <span>(共{{songList.length}}首)</span>
+          </div>
+          <ul class="song-list">
+            <li
+              @click="goPlaying(item.id)"
+              :class="[activeIndx==index?'active':'']"
+              v-for="(item,index) in songList"
+              :key="item.id"
+            >
+              <van-icon v-if="activeIndx==index" class="number" name="volume-o" />
+              <div v-else class="number">{{index+1}}</div>
+              <div class="name">
+                <p>
+                  {{item.name}}
+                  <span v-if="item.alia[0]">({{item.alia[0]}})</span>
+                </p>
+                <span>{{item.ar[0].name}}&nbsp;-&nbsp;{{item.al.name}}</span>
+              </div>
+            </li>
+          </ul>
+          <div class="null"></div>
+        </div>
       </div>
     </div>
-    </div>
     <div v-else class="loadingData">
-      <van-loading type="spinner"  color="#1FFDFA"/>
+      <van-loading type="spinner" color="#1FFDFA" />
     </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { Icon,Loading } from "vant";
+import { Icon, Loading } from "vant";
 import request from "@/api/index";
 export default {
   components: {
     [Icon.name]: Icon,
-    [Loading.name]: Loading,
+    [Loading.name]: Loading
   },
 
   data() {
     return {
-      isLoadingData:true,
+      isLoadingData: true,
       activeIndx: null, //正在播放的歌曲下标
       coverImgUrl: "", //封面背景
       name: "", //歌单标题
@@ -77,8 +77,9 @@ export default {
     };
   },
 
-  created() {
+  activated() {
     this.getPlaylistDetail(this.$route.query.id);
+    this.isLoadingData = true
   },
 
   computed: {
@@ -115,7 +116,7 @@ export default {
     },
 
     /**点击全部播放 */
-    goPlayingAll(){
+    goPlayingAll() {
       this.asyncSetSongId(this.songList[0].id);
       this.asyncSetCurrentSongList(this.songList);
       this.$router.push("/playing");
@@ -125,6 +126,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .playlist-detail {
+  flex-shrink: 0;
+  width: 100%;
+
   .background-img {
     width: 100%;
     height: 165px;

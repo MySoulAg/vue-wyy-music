@@ -69,6 +69,8 @@ export default {
 <style lang="scss" scoped>
 .recommend-warp {
   overflow-y: scroll;
+  flex-shrink: 0;
+  width: 100%;
   h5 {
     font-size: 20px;
     font-weight: bold;
