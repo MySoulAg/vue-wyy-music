@@ -86,8 +86,7 @@ export default {
       isShowLyrics: false, //是否显示歌词
       initLyricsPosition: 0, //初始化歌词位置
 
-      timeInterval1: "", //定时器
-      timeInterval2: "", //定时器
+      timeInterval: "", //定时器
 
       authorName: "", //作者
       musicName: "", //歌曲名
@@ -150,13 +149,14 @@ export default {
     getIsPlaying: {
       handler(flag) {
         if (flag) {
-          this.timeInterval1 = window.setInterval(() => {
+          this.timeInterval = window.setInterval(() => {
             this.currentTime = Math.round(this.getaudioEle.currentTime);
             this.progressValue =
               (this.getaudioEle.currentTime * 100) / this.totalTime;
+              this.lyricScroll(this.getaudioEle.currentTime);
           }, 300);
         } else {
-          window.clearInterval(this.timeInterval1);
+          window.clearInterval(this.timeInterval);
         }
       },
       immediate: true
@@ -195,11 +195,7 @@ export default {
           this.$nextTick(() => {
             this.initLyricsPosition = this.$refs.lyricBoxRef.getBoundingClientRect().height;
           });
-          this.timeInterval2 = window.setInterval(() => {
-            this.lyricScroll(this.getaudioEle.currentTime);
-          }, 300);
-        } else {
-          window.clearInterval(this.timeInterval2);
+          
         }
       }
     },
