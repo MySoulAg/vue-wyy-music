@@ -117,6 +117,9 @@ export default {
       handler() {
         this.progressValue = 0;
         this.currentTime = 0;
+        this.$refs.ulRef.style.transform = `translateY(${this
+          .initLyricsPosition / 2}px)`;
+        this.lyricArr = [];
         this.picUrl = "";
         this.musicName = "";
         this.authorName = "";
@@ -153,7 +156,7 @@ export default {
             this.currentTime = Math.round(this.getaudioEle.currentTime);
             this.progressValue =
               (this.getaudioEle.currentTime * 100) / this.totalTime;
-              this.lyricScroll(this.getaudioEle.currentTime);
+            this.lyricScroll(this.getaudioEle.currentTime);
           }, 300);
         } else {
           window.clearInterval(this.timeInterval);
@@ -195,12 +198,9 @@ export default {
           this.$nextTick(() => {
             this.initLyricsPosition = this.$refs.lyricBoxRef.getBoundingClientRect().height;
           });
-          
         }
       }
-    },
-
-    
+    }
   },
 
   methods: {
