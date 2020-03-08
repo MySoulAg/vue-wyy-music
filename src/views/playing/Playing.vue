@@ -20,6 +20,7 @@
           <div ref="lyricBoxRef" class="lyric-box" v-show="isShowLyrics">
             <ul v-if="!nolyric" ref="ulRef">
               <li
+                ref="liRef"
                 :class="[currentIndex==index?'activeLyric':'']"
                 v-for="(item,index) in lyricArr"
                 :key="index"
@@ -80,11 +81,13 @@ export default {
       nolyric: true, //是否无歌词
       lyricArr: [], //歌词
       currentIndex: 0, //当前播放的歌词下表
+      scrollHeight: 0, //歌词滚动的高度
 
       isShowLyrics: false, //是否显示歌词
       initLyricsPosition: 0, //初始化歌词位置
 
-      timeInterval: "", //定时器
+      timeInterval1: "", //定时器
+      timeInterval2: "", //定时器
 
       authorName: "", //作者
       musicName: "", //歌曲名
@@ -134,7 +137,7 @@ export default {
     getMusicUrl: {
       handler(value) {
         if (!value) {
-          console.log("无播放");
+          Toast("当前无播放");
           return;
         } else {
           this.asyncSetCurrentTime(0);
@@ -147,40 +150,16 @@ export default {
     getIsPlaying: {
       handler(flag) {
         if (flag) {
-          this.timeInterval = window.setInterval(() => {
+          this.timeInterval1 = window.setInterval(() => {
             this.currentTime = Math.round(this.getaudioEle.currentTime);
             this.progressValue =
               (this.getaudioEle.currentTime * 100) / this.totalTime;
-            this.lyricScroll(this.getaudioEle.currentTime);
           }, 300);
         } else {
-          window.clearInterval(this.timeInterval);
+          window.clearInterval(this.timeInterval1);
         }
       },
       immediate: true
-    },
-
-    currentIndex: {
-      handler(value) {
-        this.$nextTick(() => {
-          // console.log(this.initLyricsPosition);
-          this.$refs.ulRef.style.transform = `translateY(${-(
-            value * 35 -
-            this.initLyricsPosition / 2
-          )}px)`;
-        });
-      }
-      // immediate: true
-    },
-
-    isShowLyrics: {
-      handler(flag) {
-        if (flag) {
-          this.$nextTick(() => {
-            this.initLyricsPosition = this.$refs.lyricBoxRef.getBoundingClientRect().height;
-          });
-        }
-      }
     },
 
     getcurrentTime: {
@@ -190,7 +169,42 @@ export default {
           this.lyricScroll(value);
         }
       }
-    }
+    },
+
+    currentIndex: {
+      handler(value) {
+        this.scrollHeight = 0;
+        for (let i = 0; i < value; i++) {
+          this.scrollHeight += this.$refs.liRef[
+            i
+          ].getBoundingClientRect().height;
+        }
+
+        console.log(this.scrollHeight);
+        this.$refs.ulRef.style.transform = `translateY(${-(
+          this.scrollHeight -
+          this.initLyricsPosition / 2
+        )}px)`;
+      }
+    },
+
+    isShowLyrics: {
+      handler(flag) {
+        //如果显示歌词 且 在播放状态 就让歌词滚动
+        if (flag) {
+          this.$nextTick(() => {
+            this.initLyricsPosition = this.$refs.lyricBoxRef.getBoundingClientRect().height;
+          });
+          this.timeInterval2 = window.setInterval(() => {
+            this.lyricScroll(this.getaudioEle.currentTime);
+          }, 300);
+        } else {
+          window.clearInterval(this.timeInterval2);
+        }
+      }
+    },
+
+    
   },
 
   methods: {
@@ -203,6 +217,16 @@ export default {
       "asyncOrderPrevSong",
       "asyncRandomSong"
     ]),
+
+    /**歌词滚动 */
+    lyricScroll(newTime) {
+      for (let i = 0, len = this.lyricArr.length; i < len; i++) {
+        if (newTime > this.lyricArr[i].time) {
+          this.currentIndex = i;
+          continue;
+        }
+      }
+    },
 
     /**点击上一曲 */
     playingPrev() {
@@ -231,17 +255,6 @@ export default {
     /**点击播放模式 */
     playingType() {
       this.asyncSetPlayingType();
-    },
-
-    /**歌词滚动 */
-    lyricScroll(newTime) {
-      for (let i = 0, len = this.lyricArr.length; i < len; i++) {
-        if (newTime > this.lyricArr[i].time) {
-          this.currentIndex = i;
-          // return;
-        }
-      }
-      // console.log(this.currentIndex);
     },
 
     /**获取歌词 */
@@ -364,11 +377,12 @@ article {
           width: 80%;
           text-align: center;
           padding: 8px 0;
+          transition: all 0.5s;
         }
 
         li.activeLyric {
           color: aqua;
-          font-size: 15px;
+          // font-size: 15px;
         }
       }
 
