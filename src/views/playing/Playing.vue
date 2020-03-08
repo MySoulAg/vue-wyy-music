@@ -97,7 +97,7 @@ export default {
     format
   },
 
-  created() {
+  activated(){
     if(this.getCurrentSongList.length==0){
       Toast("当前无播放")
     }

@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <router-view />
+    <!-- <router-view /> -->
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive" />
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" />
     <audio
       ref="audioRef"
       :loop="getPlayingType.type==1?true:false"
