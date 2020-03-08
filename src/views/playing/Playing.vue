@@ -264,7 +264,7 @@ export default {
         console.log(res);
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].name;
-        this.picUrl = res.songs[0].al.picUrl + "?param=200y200";
+        this.picUrl = res.songs[0].al.picUrl + "?param=400y400";
         this.bgcPicUrl = res.songs[0].al.picUrl + "?param=200y200";
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });

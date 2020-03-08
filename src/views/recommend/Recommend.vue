@@ -2,10 +2,15 @@
   <div class="recommend-warp">
     <h5>精选歌单</h5>
     <div class="container">
-      <div @click="goPlaylistDetail(item.id)" class="item" v-for="(item,index) in recommendedList" :key="index">
+      <div
+        @click="goPlaylistDetail(item.id)"
+        class="item"
+        v-for="(item,index) in recommendedList"
+        :key="index"
+      >
         <!-- <div class="img" :style="{ backgroundImage: 'url(' + item.picUrl + '?param=200y200)' }"></div> -->
         <div class="img">
-          <img v-lazy="item.picUrl" alt="">
+          <img v-lazy="item.picUrl" alt />
         </div>
         <p>{{item.name}}</p>
       </div>
@@ -23,14 +28,17 @@ export default {
     };
   },
 
-  created  () {
+  created() {
     this.getRecommendedList();
-    console.log("created")
+    console.log("created");
   },
 
-  activated(){
+  activated() {
     this.asyncSetCurrentTabBar(1);
-    console.log("activated")
+    console.log("activated");
+    this.recommendedList = JSON.parse(
+      window.sessionStorage.getItem("recommendedList")
+    );
   },
 
   methods: {
@@ -42,14 +50,18 @@ export default {
         console.log(res);
         if (res && res.code == 200) {
           this.recommendedList = res.result;
+          window.sessionStorage.setItem(
+            "recommendedList",
+            JSON.stringify(res.result)
+          );
         }
       });
     },
 
     /**点击歌单 去歌单详情 */
-    goPlaylistDetail(id){
-      console.log(id)
-      this.$router.push({path:'playlistDetail',query:{id}})
+    goPlaylistDetail(id) {
+      console.log(id);
+      this.$router.push({ path: "playlistDetail", query: { id } });
     }
   }
 };
@@ -65,7 +77,7 @@ export default {
     left: 0;
     top: 0;
     width: 100%;
-    background-color: rgba(255,255,255,.9);
+    background-color: rgba(255, 255, 255, 0.9);
   }
 
   .container {

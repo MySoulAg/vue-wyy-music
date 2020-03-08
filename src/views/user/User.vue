@@ -66,6 +66,7 @@ export default {
   },
   activated() {
     this.asyncSetCurrentTabBar(4);
+    this.userList = JSON.parse(window.sessionStorage.getItem('userList'))
   },
   mounted() {
     if (this.$route.query.flag) {
@@ -102,6 +103,7 @@ export default {
           this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl +
             "?param=200y200"})`;
           this.userName = res.playlist[0].creator.nickname;
+          window.sessionStorage.setItem('userList',JSON.stringify(res.playlist))
         }
       });
     },

@@ -1,5 +1,6 @@
 <template>
   <div class="playlist-detail">
+    <div v-if="!isLoadingData">
     <div
       class="background-img"
       :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"
@@ -47,19 +48,25 @@
         <div class="null"></div>
       </div>
     </div>
+    </div>
+    <div v-else class="loadingData">
+      <van-loading type="spinner"  color="#1FFDFA"/>
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { Icon } from "vant";
+import { Icon,Loading } from "vant";
 import request from "@/api/index";
 export default {
   components: {
-    [Icon.name]: Icon
+    [Icon.name]: Icon,
+    [Loading.name]: Loading,
   },
 
   data() {
     return {
+      isLoadingData:true,
       activeIndx: null, //正在播放的歌曲下标
       coverImgUrl: "", //封面背景
       name: "", //歌单标题
@@ -91,7 +98,7 @@ export default {
         this.nickname = res.playlist.creator.nickname;
         this.description = res.playlist.description;
         this.songList = res.playlist.tracks;
-
+        this.isLoadingData = false;
         this.songList.forEach((item, index) => {
           if (item.id == this.getSongId) {
             this.activeIndx = index;
@@ -307,5 +314,13 @@ export default {
       }
     }
   }
+}
+
+.loadingData {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -30,6 +30,7 @@ export default {
     activated  () {
     this.asyncSetCurrentTabBar(2);
     console.log("activated")
+    this.rankingList = JSON.parse(window.sessionStorage.getItem('rankingList'))
   },
     methods:{
         ...mapActions(["asyncSetCurrentTabBar"]),
@@ -40,6 +41,7 @@ export default {
         console.log(res);
         if (res && res.code == 200) {
           this.rankingList = res.list;
+          window.sessionStorage.setItem('rankingList',JSON.stringify(res.list))
         }
       });
     },

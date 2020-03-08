@@ -35,7 +35,7 @@
               当前播放
               <span>({{getCurrentSongList.length}})</span>
             </h5>
-            <transition-group name="list" tag="ul">
+            <transition-group v-if="getCurrentSongList.length>0" name="list" tag="ul">
               <li
                 @click="playingSong(item.id)"
                 :class="[getSongId==item.id?'active':'']"
@@ -50,6 +50,7 @@
                 <van-icon @click.stop="deleteSong(index,item.id)" name="cross" />
               </li>
             </transition-group>
+            <div v-else class="noData">无当前播放列表</div>
             <div class="button" @click="closePopup">关闭</div>
           </div>
         </van-swipe-item>
@@ -164,6 +165,14 @@ export default {
             color: #999;
             margin-left: 5px;
           }
+        }
+
+        .noData {
+          padding: 0 15px;
+          height: calc(100% - 100px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         ul {
