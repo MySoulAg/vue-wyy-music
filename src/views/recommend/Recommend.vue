@@ -25,10 +25,12 @@ export default {
 
   created  () {
     this.getRecommendedList();
+    console.log("created")
   },
 
   activated(){
     this.asyncSetCurrentTabBar(1);
+    console.log("activated")
   },
 
   methods: {

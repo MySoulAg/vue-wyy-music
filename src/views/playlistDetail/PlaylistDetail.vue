@@ -6,7 +6,11 @@
     ></div>
     <div class="wrap">
       <header>
-        <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div>
+        <!-- <div class="left" :style="{ backgroundImage: 'url(' + coverImgUrl + '?param=200y200)' }"></div> -->
+        <div class="left">
+          <img v-lazy="coverImgUrl" alt="">
+        </div>
+        
         <div class="right">
           <h5>{{name}}</h5>
           <div class="author">
@@ -138,9 +142,14 @@ export default {
         width: 115px;
         height: 115px;
         // background-color: aqua;
-        border-radius: 6px;
-        background-position: center;
-        background-size: cover;
+        // border-radius: 6px;
+        // background-position: center;
+        // background-size: cover;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 6px;
+        }
       }
 
       .right {
