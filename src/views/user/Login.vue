@@ -1,7 +1,9 @@
 <template>
   <div class="login">
-    <div class="logo">
-      <i class="iconfont icon-weibiaoti-"></i>
+    <div class="logo-box">
+      <div class="logo">
+        <i class="iconfont icon-weibiaoti-"></i>
+      </div>
     </div>
     <h5>您还没有登录噢(つェ⊂)</h5>
     <div class="button" @click="clickLoginByPhone">手机登录</div>
@@ -98,12 +100,8 @@
         >{{secondCaptchaActive?defaultSecond+'s':'重新发送'}}</span>
       </p>
       <!-- 验证码输入框 -->
-      <van-password-input length="4" :mask="false" :gutter="0" :value="aptchaValue" :focused="showKeyboard" @focus="showKeyboard = true"/>
-      <van-number-keyboard
-        :show="showKeyboard"
-        @input="onInput"
-        @delete="onDelete"
-      />
+      <van-password-input />
+      <van-number-keyboard :show="showKeyboard" @input="onInput" @delete="onDelete" />
     </van-popup>
   </div>
 </template>
@@ -348,11 +346,10 @@ export default {
     /**uid的弹出层 开启后 触发 */
     uidOpened() {
       this.isShowUidDialog = true;
-
     },
 
     /**uid的 dialog弹出后 触发*/
-    openedDialog(){
+    openedDialog() {
       this.$refs.uIdRef.focus();
     }
   }
@@ -360,7 +357,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .login {
-  background-color: #7c252c;
+  background-color: #ac0614;
   width: 100%;
   height: 100%;
   display: flex;
@@ -368,26 +365,47 @@ export default {
   // justify-content: space-around;
   align-items: center;
 
-  .logo {
-    width: 70px;
-    height: 70px;
-    text-align: center;
-    line-height: 70px;
-    color: #fff;
+  .logo-box {
+    margin-top: 25%;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(#FDA01F,#93FD1F,#1F71FD,#FD1FE9);
+    animation: rotate 1.5s linear infinite;
     border-radius: 50%;
-    background-color: #ff0418;
-    border: 1px solid white;
-    margin-top: 30%;
 
-    i {
-      font-size: 48px;
-      font-weight: 900;
+    @keyframes rotate {
+      0% {
+        filter: hue-rotate(0deg);
+      }
+      100% {
+        filter: hue-rotate(360deg);
+      }
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      text-align: center;
+      line-height: 70px;
+      color: #fff;
+      border-radius: 50%;
+      background-color: rgb(250, 4, 4);
+      // border: 1px solid white;
+      
+
+      i {
+        font-size: 48px;
+        font-weight: 900;
+      }
     }
   }
 
   h5 {
     font-size: 20px;
-    margin-top: 30%;
+    margin-top: 20%;
   }
 
   .button,
@@ -396,7 +414,7 @@ export default {
     border-radius: 50px;
     // border: 1px solid #fff;
     font-size: 20px;
-    margin-top: 25%;
+    margin-top: 20%;
     color: #ff0418;
     background-color: #fff;
     font-weight: bold;

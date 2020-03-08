@@ -10,14 +10,13 @@
       <main @click="isShowLyrics=!isShowLyrics">
         <transition name="fade">
           <div
-            v-show="!isShowLyrics"
             class="pic"
-            :class="[getIsPlaying?'rotation':'']"
+            :class="[getIsPlaying?'rotation':'',isShowLyrics?'opacity':'']"
             :style="{ backgroundImage: 'url(' + picUrl + ')' }"
           ></div>
         </transition>
         <transition name="fade">
-          <div ref="lyricBoxRef" class="lyric-box" v-show="isShowLyrics">
+          <div ref="lyricBoxRef" class="lyric-box" :class="[!isShowLyrics?'opacity':'']">
             <ul v-if="!nolyric" ref="ulRef">
               <li
                 ref="liRef"
@@ -27,6 +26,10 @@
               >{{item.text}}</li>
             </ul>
             <div v-else class="noLyric">无歌词</div>
+            <div class="masktop1"></div>
+            <div class="masktop2"></div>
+            <div class="maskbottom1"></div>
+            <div class="maskbottom2"></div>
           </div>
         </transition>
       </main>
@@ -84,7 +87,6 @@ export default {
       scrollHeight: 0, //歌词滚动的高度
 
       isShowLyrics: false, //是否显示歌词
-      initLyricsPosition: 0, //初始化歌词位置
 
       timeInterval: "", //定时器
 
@@ -117,8 +119,7 @@ export default {
       handler() {
         this.progressValue = 0;
         this.currentTime = 0;
-        this.$refs.ulRef.style.transform = `translateY(${this
-          .initLyricsPosition / 2}px)`;
+        this.$refs.ulRef.style.transform = `translateY(177px)`;
         this.lyricArr = [];
         this.picUrl = "";
         this.musicName = "";
@@ -177,30 +178,18 @@ export default {
     currentIndex: {
       handler(value) {
         this.scrollHeight = 0;
+        
         for (let i = 0; i < value; i++) {
           this.scrollHeight += this.$refs.liRef[
             i
           ].getBoundingClientRect().height;
         }
-
-        console.log(this.scrollHeight);
         this.$refs.ulRef.style.transform = `translateY(${-(
           this.scrollHeight -
-          this.initLyricsPosition / 2
+          177
         )}px)`;
       }
     },
-
-    isShowLyrics: {
-      handler(flag) {
-        //如果显示歌词 且 在播放状态 就让歌词滚动
-        if (flag) {
-          this.$nextTick(() => {
-            this.initLyricsPosition = this.$refs.lyricBoxRef.getBoundingClientRect().height;
-          });
-        }
-      }
-    }
   },
 
   methods: {
@@ -361,8 +350,10 @@ article {
 
     .lyric-box {
       width: 100%;
-      height: 90%;
+      height: 390px;
       overflow-y: hidden;
+      transition: all 1s;
+      position: relative;
       ul {
         width: 100%;
         height: 100%;
@@ -389,6 +380,15 @@ article {
         justify-content: center;
         align-items: center;
       }
+
+      .masktop1 {
+        position: absolute;
+        width: 100%;
+        height: 35px;
+        left: 0;
+        top: 0;
+        filter: blur(5px);
+      }
     }
 
     .pic {
@@ -399,6 +399,7 @@ article {
       border-radius: 50%;
       background-size: cover;
       background-position: center;
+      transition: all 1s;
     }
 
     @-webkit-keyframes rotation {
@@ -485,5 +486,9 @@ article {
       }
     }
   }
+}
+
+.opacity {
+  opacity: 0;
 }
 </style>

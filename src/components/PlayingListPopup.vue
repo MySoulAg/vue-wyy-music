@@ -179,6 +179,8 @@ export default {
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
+              display: flex;
+    align-items: center;
 
               p {
                 max-width: 100%;
@@ -193,7 +195,7 @@ export default {
                 font-size: 12px;
                 color: rgba(0, 0, 0, 0.5);
                 margin-left: 3px;
-                padding-top: 3px;
+                // padding-top: 3px;
               }
             }
 
