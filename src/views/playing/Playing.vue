@@ -125,6 +125,7 @@ export default {
         this.picUrl = "";
         this.musicName = "";
         this.authorName = "";
+        
       }
     },
     getPlayingType: {
@@ -136,6 +137,7 @@ export default {
         } else {
           Toast("随机播放");
         }
+        
       }
     },
     getMusicUrl: {
@@ -147,7 +149,11 @@ export default {
           this.asyncSetCurrentTime(0);
           this.getMusicDetail(this.getSongId);
           this.getLyric(this.getSongId);
+          console.log(22222222222)
         }
+        console.log(999999999)
+        console.log(value)
+       
       },
       immediate: true
     },
@@ -265,7 +271,7 @@ export default {
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].name;
         this.picUrl = res.songs[0].al.picUrl + "?param=400y400";
-        this.bgcPicUrl = res.songs[0].al.picUrl + "?param=200y200";
+        this.bgcPicUrl = res.songs[0].al.picUrl + "?param=400y400";
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });
     },
