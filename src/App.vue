@@ -29,6 +29,7 @@ import { mapGetters, mapActions } from "vuex";
 import request from "@/api/index";
 import { Toast, Loading } from "vant";
 export default {
+  name:"App",
   components: {
     [Loading.name]: Loading
   },

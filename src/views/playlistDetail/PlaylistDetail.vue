@@ -59,6 +59,7 @@ import { mapGetters, mapActions } from "vuex";
 import { Icon, Loading } from "vant";
 import request from "@/api/index";
 export default {
+  name: "PlaylistDetail",
   components: {
     [Icon.name]: Icon,
     [Loading.name]: Loading
@@ -79,7 +80,7 @@ export default {
 
   activated() {
     this.getPlaylistDetail(this.$route.query.id);
-    this.isLoadingData = true
+    this.isLoadingData = true;
   },
 
   computed: {

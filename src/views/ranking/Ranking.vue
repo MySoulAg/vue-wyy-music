@@ -22,6 +22,7 @@
 import { mapActions } from "vuex";
 import request from "@/api/index";
 export default {
+  name: "Ranking",
   data() {
     return {
       rankingList: [] //排行歌单列表

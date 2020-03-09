@@ -67,6 +67,7 @@ import { format, parseLyric } from "@/utils/utils.js";
 import PlayingListPopup from "@/components/PlayingListPopup";
 import request from "@/api/index";
 export default {
+  name: "Playing",
   components: {
     [Slider.name]: Slider,
     PlayingListPopup
@@ -97,9 +98,9 @@ export default {
     format
   },
 
-  activated(){
-    if(this.getCurrentSongList.length==0){
-      Toast("当前无播放")
+  activated() {
+    if (this.getCurrentSongList.length == 0) {
+      Toast("当前无播放");
     }
   },
 
@@ -125,7 +126,6 @@ export default {
         this.picUrl = "";
         this.musicName = "";
         this.authorName = "";
-        
       }
     },
     getPlayingType: {
@@ -137,7 +137,6 @@ export default {
         } else {
           Toast("随机播放");
         }
-        
       }
     },
     getMusicUrl: {
@@ -149,11 +148,10 @@ export default {
           this.asyncSetCurrentTime(0);
           this.getMusicDetail(this.getSongId);
           this.getLyric(this.getSongId);
-          console.log(22222222222)
+          console.log(22222222222);
         }
-        console.log(999999999)
-        console.log(value)
-       
+        console.log(999999999);
+        console.log(value);
       },
       immediate: true
     },
@@ -185,18 +183,17 @@ export default {
     currentIndex: {
       handler(value) {
         this.scrollHeight = 0;
-        
+
         for (let i = 0; i < value; i++) {
           this.scrollHeight += this.$refs.liRef[
             i
           ].getBoundingClientRect().height;
         }
         this.$refs.ulRef.style.transform = `translateY(${-(
-          this.scrollHeight -
-          135
+          this.scrollHeight - 135
         )}px)`;
       }
-    },
+    }
   },
 
   methods: {
@@ -389,7 +386,6 @@ article {
         justify-content: center;
         align-items: center;
       }
-
     }
 
     .pic {

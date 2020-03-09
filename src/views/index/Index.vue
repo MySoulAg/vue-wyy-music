@@ -33,6 +33,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
+  name: "Index",
   data() {
     return {
       transitionName: "fade-left"

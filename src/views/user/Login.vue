@@ -100,8 +100,12 @@
         >{{secondCaptchaActive?defaultSecond+'s':'重新发送'}}</span>
       </p>
       <!-- 验证码输入框 -->
-      <van-password-input />
-      <van-number-keyboard :show="showKeyboard" @input="onInput" @delete="onDelete" />
+      <van-password-input length="4" :mask="false" :gutter="0" :value="aptchaValue" :focused="showKeyboard" @focus="showKeyboard = true"/>
+      <van-number-keyboard
+        :show="showKeyboard"
+        @input="onInput"
+        @delete="onDelete"
+      />
     </van-popup>
   </div>
 </template>
@@ -118,6 +122,7 @@ import {
 import { checkPhone } from "@/utils/utils";
 import request from "@/api/index";
 export default {
+  name: "Login",
   components: {
     [Popup.name]: Popup,
     [Icon.name]: Icon,

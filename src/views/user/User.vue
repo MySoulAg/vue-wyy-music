@@ -24,9 +24,9 @@
         <!-- <div
           class="img"
           :style="{ backgroundImage: 'url(' + item.coverImgUrl + '?param=200y200)' }"
-        ></div> -->
-        <div class="img" >
-          <img v-lazy="item.coverImgUrl" alt="">
+        ></div>-->
+        <div class="img">
+          <img v-lazy="item.coverImgUrl" alt />
         </div>
         <p>{{item.name}}</p>
       </div>
@@ -41,6 +41,7 @@
 import { mapActions } from "vuex";
 import request from "@/api/index";
 export default {
+  name: "User",
   data() {
     return {
       userList: [], //我的歌单列表
@@ -66,10 +67,10 @@ export default {
   },
   activated() {
     this.asyncSetCurrentTabBar(4);
-    if(this.$route.query.flag){
-      return
+    if (this.$route.query.flag) {
+      return;
     }
-    this.userList = JSON.parse(window.sessionStorage.getItem('playlist'))
+    this.userList = JSON.parse(window.sessionStorage.getItem("playlist"));
   },
   mounted() {
     if (this.$route.query.flag) {
@@ -106,7 +107,10 @@ export default {
           this.$refs.maskRef.style.backgroundImage = `url(${this.avatarUrl +
             "?param=200y200"})`;
           this.userName = res.playlist[0].creator.nickname;
-          window.sessionStorage.setItem('userList',JSON.stringify(res.playlist))
+          window.sessionStorage.setItem(
+            "userList",
+            JSON.stringify(res.playlist)
+          );
         }
       });
     },
