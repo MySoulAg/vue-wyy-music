@@ -66,7 +66,10 @@ export default {
   },
   activated() {
     this.asyncSetCurrentTabBar(4);
-    this.userList = JSON.parse(window.sessionStorage.getItem('userList'))
+    if(this.$route.query.flag){
+      return
+    }
+    this.userList = JSON.parse(window.sessionStorage.getItem('playlist'))
   },
   mounted() {
     if (this.$route.query.flag) {
