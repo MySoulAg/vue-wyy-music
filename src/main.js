@@ -2,9 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import FastClick from "fastclick";
+import FastClick from "fastclick"
 import VueLazyload from 'vue-lazyload'
 
+import './utils/rem'
 
 import './assets/icon/iconfont.css' //字体图标
 
