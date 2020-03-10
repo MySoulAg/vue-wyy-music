@@ -53,11 +53,11 @@
           <i @click="playingPrev" class="iconfont icon-shangyiqu"></i>
           <i @click="playing" class="iconfont" :class="[getIsPlaying?'icon-bofang':'icon-zanting']"></i>
           <i @click="playingNext" class="iconfont icon-shangyiqu1"></i>
-          <i @click="isShow = !isShow" class="iconfont icon-liebiao"></i>
+          <i @click="handleShow" class="iconfont icon-liebiao"></i>
         </div>
       </footer>
     </div>
-    <PlayingListPopup :isShow.sync="isShow"></PlayingListPopup>
+    <PlayingListPopup :isShow.sync="isShow" :historySongList="historySongList"></PlayingListPopup>
   </article>
 </template>
 <script>
@@ -82,6 +82,7 @@ export default {
       lyricArr: [], //歌词
       currentIndex: 0, //当前播放的歌词下表
       scrollHeight: 0, //歌词滚动的高度
+      historySongList:[],
 
       isShowLyrics: false, //是否显示歌词
 
@@ -150,10 +151,7 @@ export default {
           this.asyncSetCurrentTime(0);
           this.getMusicDetail(this.getSongId);
           this.getLyric(this.getSongId);
-          console.log(22222222222);
         }
-        console.log(999999999);
-        console.log(value);
       },
       immediate: true
     },
@@ -167,11 +165,11 @@ export default {
             this.lyricScroll(this.getaudioEle.currentTime);
           }, 300);
 
-          //如果播放了一半的时间，就存入历史列表
+          //如果播放了60s的时间，就存入历史列表
           this.timeInterval2 = window.setTimeout(() => {
             this.setHistoryList();
             window.clearInterval(this.timeInterval2);
-          }, (this.totalTime / 2)*1000);
+          }, 60000);
         } else {
           window.clearInterval(this.timeInterval);
           window.clearInterval(this.timeInterval2);
@@ -216,12 +214,21 @@ export default {
       "asyncRandomSong"
     ]),
 
+    /**点击列表 */
+    handleShow(){
+      let temArr = JSON.parse(window.localStorage.getItem('historySongList'))
+      if(temArr){
+        this.historySongList = temArr
+      }
+      
+      this.isShow = !this.isShow
+    },
+
     /**存历史播放 */
     setHistoryList() {
-      let historySongList = JSON.parse(
-        window.localStorage.getItem("historySongList")
-      );
-      if (historySongList) {
+      let historySongString = window.localStorage.getItem("historySongList");
+      if (historySongString) {
+        let historySongList = JSON.parse(historySongString)
         //判断历史列表中是否已存在该歌曲，如果存在，就把该歌曲移动到数组的开头
         for (let i = 0, len = historySongList.length; i < len; i++) {
           if (this.getCurrentSong.id == historySongList[i].id) {

@@ -6,7 +6,6 @@
     v-model="isShow"
     position="bottom"
     @closed="closedPopup"
-    @open="openPopup"
     :style="{ height: '85%' }"
   >
     <div class="warp">
@@ -57,7 +56,7 @@
                 <van-icon @click.stop="deleteSong(index,item.id)" name="cross" />
               </li>
             </transition-group>
-            <div v-else class="noData">无当前播放列表</div>
+            <div v-else class="noData">无当前播放列表(つェ⊂)</div>
             <div class="button" @click="closePopup">关闭</div>
           </div>
         </van-swipe-item>
@@ -80,12 +79,17 @@ export default {
     isShow: {
       type: Boolean,
       default: false
+    },
+    historySongList:{
+      type:Array,
+      default:()=>[]
     }
   },
 
   data() {
     return {
-      historySongList:[],//历史播放列表
+      
+      // historySongList:[],//历史播放列表
       overlayStyle: {
         backgroundColor: "transparent"
       }
@@ -125,10 +129,6 @@ export default {
       this.$refs.swipeRef.swipeTo(1);
     },
 
-    /**打开弹出层时触发 */
-    openPopup(){
-      this.historySongList = JSON.parse(window.localStorage.getItem('historySongList'))
-    }
   }
 };
 </script>
