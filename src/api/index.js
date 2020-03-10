@@ -121,4 +121,12 @@ export default {
         })
     },
 
+    /**获取Banner轮播 */
+    getBanner() {
+        return request({
+            method: 'get',
+            url: '/banner?type=2',
+        })
+    }
+
 }

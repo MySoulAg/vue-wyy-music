@@ -9,10 +9,12 @@
         :key="index"
       >
         <!-- <div class="img" :style="{ backgroundImage: 'url(' + item.coverImgUrl + '?param=200y200)' }"></div> -->
-        <div class="img">
-          <img v-lazy="item.coverImgUrl" alt />
+        <div class="box">
+          <div class="img">
+            <img v-lazy="item.coverImgUrl" alt />
+          </div>
+          <p>{{item.name}}</p>
         </div>
-        <p>{{item.name}}</p>
       </div>
       <div class="null"></div>
     </div>
@@ -81,51 +83,61 @@ export default {
   }
 
   .container {
-    padding: 10px;
+    padding: 15px;
     display: flex;
     flex-wrap: wrap;
-    margin-top: 50px;
+    margin-top: 30px;
     // justify-content: space-around;
+
+    .item:nth-of-type(3n+1){
+      justify-content: flex-start;
+    }
+    .item:nth-of-type(3n+2){
+      justify-content: center;
+    }
+    .item:nth-of-type(3n){
+      justify-content: flex-end;
+    }
 
     .item {
       width: 33%;
-      // height: 130px;
-      //   background-color: aqua;
       display: flex;
-      flex-direction: column;
-      align-items: center;
 
-      .img {
-        width: 100px;
-        height: 100px;
-        // background-color: royalblue;
-        // border-radius: 6px;
-        // background-size: cover;
-        // background-position: center;
-        img {
-          width: 100%;
-          height: 100%;
-          border-radius: 6px;
+      .box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+
+        .img {
+          // width: 100px;
+          // height: 100px;
+
+          img {
+            width: 100%;
+            // height: 100%;
+            border-radius: 6px;
+          }
         }
-      }
 
-      p {
-        width: 90px;
-        height: 28px;
-        line-height: 14px;
-        padding-top: 2px;
-        box-sizing: content-box;
-        margin-bottom: 15px;
-        text-align: justify;
-        overflow: hidden;
-        /* text-overflow: ellipsis; */
-        /* //作为弹性伸缩盒子模型显示。 */
-        display: -webkit-box;
-        /* //设置伸缩盒子的子元素排列方式--从上到下垂直排列 */
-        -webkit-box-orient: vertical;
-        /* //显示的行，文本超出 显示几行 */
-        -webkit-line-clamp: 2;
-        font-size: 11px;
+        p {
+          width: 100%;
+          height: 28px;
+          line-height: 14px;
+          padding-top: 2px;
+          box-sizing: content-box;
+          margin-bottom: 15px;
+          text-align: justify;
+          overflow: hidden;
+          /* text-overflow: ellipsis; */
+          /* //作为弹性伸缩盒子模型显示。 */
+          display: -webkit-box;
+          /* //设置伸缩盒子的子元素排列方式--从上到下垂直排列 */
+          -webkit-box-orient: vertical;
+          /* //显示的行，文本超出 显示几行 */
+          -webkit-line-clamp: 2;
+          font-size: 11px;
+        }
       }
     }
 
