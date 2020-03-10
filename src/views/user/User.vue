@@ -72,7 +72,7 @@ export default {
     if (this.$route.query.flag) {
       return;
     }
-    this.userList = JSON.parse(window.sessionStorage.getItem("playlist"));
+    // this.userList = JSON.parse(window.sessionStorage.getItem("playlist"));
   },
   mounted() {
     if (this.$route.query.flag) {

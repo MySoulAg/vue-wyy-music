@@ -1,11 +1,12 @@
 <template>
   <div class="recommend-warp">
+
     <div class="swipe-box">
       <van-swipe class="my-swipe" :autoplay="5000" indicator-color="#FD461F">
         <van-swipe-item v-for="item in bannerList" :key="item.targetId">
-          <div class="img-box">
+          <div class="img-box" @click="handleSwipe(item)">
             <img :src="item.pic" />
-            <div class="type" :class="[item.targetType==1?'red':'blue']">{{item.typeTitle}}</div>
+            <div class="type" :class="[item.titleColor=='red'?'red':'blue']">{{item.typeTitle}}</div>
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -63,7 +64,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(["asyncSetCurrentTabBar"]),
+    ...mapActions(["asyncSetCurrentTabBar","asyncSetSongId"]),
+
+    /**点击轮播图 */
+    handleSwipe(item){
+      if(item.targetType==1){
+        //歌曲
+        this.asyncSetSongId(item.song.id);
+        this.$router.push("/playing")
+      }
+    },
 
     /**获取Banner轮播 */
     getBanner() {

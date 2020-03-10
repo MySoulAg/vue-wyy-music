@@ -100,7 +100,7 @@ export default {
 
   activated() {
     if (this.getCurrentSongList.length == 0) {
-      Toast("当前无播放");
+      // Toast("当前无播放");
     }
   },
 
@@ -267,8 +267,8 @@ export default {
         console.log(res);
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].name;
-        this.picUrl = res.songs[0].al.picUrl + "?param=400y400";
-        this.bgcPicUrl = res.songs[0].al.picUrl + "?param=400y400";
+        this.picUrl = res.songs[0].al.picUrl + "?param=500y500";
+        this.bgcPicUrl = res.songs[0].al.picUrl + "?param=500y500";
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });
     },
