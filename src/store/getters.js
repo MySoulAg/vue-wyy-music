@@ -5,6 +5,7 @@ export default {
     getSongId: state => state.songId, //获取歌曲ID
     getCurrentTabBar: state => state.currentTabBar, //获取当前选中TabBar
     getCurrentSongList: state => state.currentSongList, //获取当前播放的歌曲列表
+    getCurrentSong: state => state.currentSong, //获取当前播放的歌曲
     getPlayingType: state => {
         if (state.playingType == 0) {
             return {

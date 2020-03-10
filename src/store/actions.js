@@ -41,6 +41,13 @@ export default {
         commit("setCurrentSongList", currentSongList)
     },
 
+    /**修改当前播放的歌曲 */
+    asyncSetCurrentSong({
+        commit
+    }, currentSong) {
+        commit("setCurrentSong", currentSong)
+    },
+
     /**修改当前播放的模式 */
     asyncSetPlayingType({
         commit

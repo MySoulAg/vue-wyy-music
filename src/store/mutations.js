@@ -41,6 +41,11 @@ export default {
 
     },
 
+    /**修改当前播放的歌曲 */
+    setCurrentSong(state, currentSong) {
+        state.currentSong = currentSong
+    },
+
     /**修改当前播放的模式 */
     setPlayingType(state) {
         state.playingType++;

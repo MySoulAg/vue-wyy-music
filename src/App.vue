@@ -29,7 +29,7 @@ import { mapGetters, mapActions } from "vuex";
 import request from "@/api/index";
 import { Toast, Loading } from "vant";
 export default {
-  name:"App",
+  name: "App",
   components: {
     [Loading.name]: Loading
   },
@@ -47,7 +47,8 @@ export default {
       "getcurrentTime",
       "getSongId",
       "getCurrentTabBar",
-      "getPlayingType"
+      "getPlayingType",
+      "getCurrentSongList"
     ])
   },
 
@@ -101,7 +102,8 @@ export default {
       "asyncSetSongId",
       "asyncSetMusicUrl",
       "asyncOrderNextSong",
-      "asyncRandomSong"
+      "asyncRandomSong",
+      "asyncSetCurrentSong"
     ]),
 
     canPlayThrough() {
@@ -151,9 +153,16 @@ export default {
           this.songUrl = res.data[0].url;
           this.asyncSetMusicUrl(res.data[0].url);
           console.log("获取到了url地址");
+          for (let i = 0, len = this.getCurrentSongList.length; i < len; i++) {
+            if (this.getCurrentSongList[i].id == this.getSongId) {
+              this.asyncSetCurrentSong(this.getCurrentSongList[i]);
+              break;
+            }
+          }
         } else {
           Toast("该歌曲不可播放,已切换下一曲");
           // this.asyncSetMusicUrl(null)
+          this.asyncSetCurrentSong(null);
           this.songUrl = "";
           if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
             //顺序的下一曲
@@ -189,11 +198,9 @@ export default {
   z-index: 9999;
 }
 
-
-
 .fade-left-enter-active,
 .fade-left-leave-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .fade-left-leave-to {
@@ -208,5 +215,4 @@ export default {
   transform: translateX(-105%);
   opacity: 0;
 }
-
 </style>

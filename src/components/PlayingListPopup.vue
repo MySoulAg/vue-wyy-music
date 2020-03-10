@@ -6,6 +6,7 @@
     v-model="isShow"
     position="bottom"
     @closed="closedPopup"
+    @open="openPopup"
     :style="{ height: '85%' }"
   >
     <div class="warp">
@@ -13,18 +14,24 @@
       <van-swipe ref="swipeRef" :loop="false" initial-swipe="1" indicator-color="#fff">
         <van-swipe-item>
           <div class="lastLis list-box">
-            <h5>历史播放</h5>
+            <h5>历史播放
+              <span>({{historySongList.length}})</span>
+            </h5>
             <ul>
-              <li>给他任何</li>
-              <li>突然间</li>
-              <li>热环境</li>
-              <li>就一台空调遥控</li>
-              <li>热霍比特人九年</li>
-              <li>虽然扽教育科</li>
-              <li>的天热家庭人均你</li>
-              <li>个太热九年</li>
-              <li>给他软件</li>
-              <li>惹的祸</li>
+
+              <li
+                @click="playingSong(item.id)"
+                :class="[getSongId==item.id?'active':'']"
+                v-for="item in historySongList"
+                :key="item.id"
+              >
+                <van-icon v-if="getSongId==item.id" class="activeInon" name="volume-o" />
+                <div class="left">
+                  <p>{{item.name}}</p>
+                  <span>-&nbsp;{{item.ar[0].name}}</span>
+                </div>
+              </li>
+              
             </ul>
             <div class="button" @click="closePopup">关闭</div>
           </div>
@@ -78,6 +85,7 @@ export default {
 
   data() {
     return {
+      historySongList:[],//历史播放列表
       overlayStyle: {
         backgroundColor: "transparent"
       }
@@ -115,6 +123,11 @@ export default {
     /**弹出层关闭后触发 */
     closedPopup() {
       this.$refs.swipeRef.swipeTo(1);
+    },
+
+    /**打开弹出层时触发 */
+    openPopup(){
+      this.historySongList = JSON.parse(window.localStorage.getItem('historySongList'))
     }
   }
 };

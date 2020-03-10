@@ -29,7 +29,7 @@
           </div>
           <ul class="song-list">
             <li
-              @click="goPlaying(item.id)"
+              @click="goPlaying(item)"
               :class="[activeIndx==index?'active':'']"
               v-for="(item,index) in songList"
               :key="item.id"
@@ -110,8 +110,8 @@ export default {
     },
 
     /**点击列表 跳 播放 */
-    goPlaying(id) {
-      this.asyncSetSongId(id);
+    goPlaying(item) {
+      this.asyncSetSongId(item.id);
       this.asyncSetCurrentSongList(this.songList);
       this.$router.push("/playing");
     },
