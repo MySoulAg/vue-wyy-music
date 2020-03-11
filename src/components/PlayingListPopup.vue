@@ -16,7 +16,7 @@
             <h5>历史播放
               <span>({{historySongList.length}})</span>
             </h5>
-            <ul>
+            <ul v-if="historySongList.length>0">
 
               <li
                 @click="playingSong(item.id)"
@@ -32,6 +32,7 @@
               </li>
               
             </ul>
+            <div v-else class="noData">无历史播放，快去听听吧(つェ⊂)</div>
             <div class="button" @click="closePopup">关闭</div>
           </div>
         </van-swipe-item>
