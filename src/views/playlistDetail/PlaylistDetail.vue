@@ -78,18 +78,18 @@ export default {
     };
   },
 
-  created() {
-    this.activeIndx = null;
-    this.getPlaylistDetail(this.$route.query.id);
-    this.isLoadingData = true;
-  },
+  // created() {
+  //   this.activeIndx = null;
+  //   this.getPlaylistDetail(this.$route.query.id);
+  //   this.isLoadingData = true;
+  // },
 
   computed: {
     ...mapGetters(["getSongId"])
   },
 
   beforeRouteEnter(to, from, next) {
-    if (from.path == "/palying") {
+    if (from.path == "/playing") {
       next(vm => {
         let temArr = JSON.parse(
           window.sessionStorage.getItem("playlistDetail")
@@ -100,42 +100,44 @@ export default {
         vm.nickname = temArr.creator.nickname;
         vm.description = temArr.description;
         vm.songList = temArr.tracks;
+
+        vm.songList.forEach((item, index) => {
+          if (item.id == vm.$store.getters.getSongId) {
+            vm.activeIndx = index;
+          }
+        });
       });
       return;
     }
 
     next(vm => {
       vm.activeIndx = null;
-      vm.getPlaylistDetail(vm.$route.query.id);
-      // vm.isLoadingData = true;
+      /**获取歌单详情 */
+      request.getPlaylistDetail(vm.$route.query.id).then(res => {
+        console.log(res);
+        vm.coverImgUrl = res.playlist.coverImgUrl;
+        vm.name = res.playlist.name;
+        vm.avatarUrl = res.playlist.creator.avatarUrl;
+        vm.nickname = res.playlist.creator.nickname;
+        vm.description = res.playlist.description;
+        vm.songList = res.playlist.tracks;
+        vm.isLoadingData = false;
+        vm.songList.forEach((item, index) => {
+          if (item.id == vm.$store.getters.getSongId) {
+            vm.activeIndx = index;
+          }
+        });
+        window.sessionStorage.setItem(
+          "playlistDetail",
+          JSON.stringify(res.playlist)
+        );
+      });
+      vm.isLoadingData = true;
     });
   },
 
   methods: {
     ...mapActions(["asyncSetSongId", "asyncSetCurrentSongList"]),
-
-    /**获取歌单详情 */
-    getPlaylistDetail(id) {
-      request.getPlaylistDetail(id).then(res => {
-        console.log(res);
-        window.sessionStorage.setItem(
-          "playlistDetail",
-          JSON.stringify(res.playlist)
-        );
-        this.coverImgUrl = res.playlist.coverImgUrl;
-        this.name = res.playlist.name;
-        this.avatarUrl = res.playlist.creator.avatarUrl;
-        this.nickname = res.playlist.creator.nickname;
-        this.description = res.playlist.description;
-        this.songList = res.playlist.tracks;
-        this.isLoadingData = false;
-        this.songList.forEach((item, index) => {
-          if (item.id == this.getSongId) {
-            this.activeIndx = index;
-          }
-        });
-      });
-    },
 
     /**点击列表 跳 播放 */
     goPlaying(item) {
