@@ -108,4 +108,9 @@ export default {
         let randomIndex = getRandom(0, state.currentSongList.length - 1, itemIndex)
         state.songId = state.currentSongList[randomIndex].id
     },
+
+    /**修改loading状态 */
+    setLoadingFlag(state, loadingFlag) {
+        state.loadingFlag = loadingFlag
+    },
 }

@@ -75,5 +75,10 @@ export default {
     /**随机播放下一曲 或 上一曲  */
     asyncRandomSong({commit}){
         commit("randomSong")
+    },
+
+    /**修改loading状态  */
+    asyncSetLoadingFlag({commit},loadingFlag){
+        commit("setLoadingFlag",loadingFlag)
     }
 }

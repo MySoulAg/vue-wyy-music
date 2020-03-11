@@ -26,4 +26,5 @@ export default {
     }, //获取当前播放的模式
     
     getMusicUrl: state => state.musicUrl, //获取音乐的url地址
+    getLoadingFlag: state => state.loadingFlag, //获取loading状态
 }

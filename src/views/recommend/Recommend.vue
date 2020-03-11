@@ -34,7 +34,7 @@
 </template>
 <script>
 import { Swipe, SwipeItem } from "vant";
-import { mapActions } from "vuex";
+import { mapGetters,mapActions } from "vuex";
 import request from "@/api/index";
 export default {
   name: "Recommend",
@@ -50,6 +50,7 @@ export default {
   },
 
   created() {
+    this.asyncSetLoadingFlag(true)
     this.getRecommendedList();
     console.log("created");
     this.getBanner();
@@ -58,13 +59,14 @@ export default {
   activated() {
     this.asyncSetCurrentTabBar(1);
     console.log("activated");
-    this.recommendedList = JSON.parse(
-      window.sessionStorage.getItem("recommendedList")
-    );
+  },
+
+  computed: {
+    ...mapGetters(["getLoadingFlag"])
   },
 
   methods: {
-    ...mapActions(["asyncSetCurrentTabBar","asyncSetSongId"]),
+    ...mapActions(["asyncSetCurrentTabBar","asyncSetSongId","asyncSetLoadingFlag"]),
 
     /**点击轮播图 */
     handleSwipe(item){
@@ -87,12 +89,9 @@ export default {
     getRecommendedList() {
       request.getRecommendedList().then(res => {
         console.log(res);
+        this.asyncSetLoadingFlag(false)
         if (res && res.code == 200) {
           this.recommendedList = res.result;
-          window.sessionStorage.setItem(
-            "recommendedList",
-            JSON.stringify(res.result)
-          );
         }
       });
     },

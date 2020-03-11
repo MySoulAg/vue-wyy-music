@@ -8,4 +8,5 @@ export default {
     currentSong: null, //当前播放的歌曲
     playingType: 0, //播放模式   0：循序播放（默认）1：单曲循环 2：随机播放
     musicUrl:null,//音乐的url地址
+    loadingFlag:false,//是否显示loading
 }

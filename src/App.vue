@@ -21,7 +21,7 @@
       @error="handleError"
       @loadstart="loadStart"
     ></audio>
-    <van-loading v-show="isShowLoading" type="spinner" color="#1FFDFA" />
+    <van-loading v-show="getLoadingFlag" type="spinner" color="#1FFDFA" />
   </div>
 </template>
 <script>
@@ -38,7 +38,6 @@ export default {
     return {
       transitionName: "fade-left",
       songUrl: "", //歌曲url
-      isShowLoading: false //是否显示loading
     };
   },
   computed: {
@@ -48,7 +47,8 @@ export default {
       "getSongId",
       "getCurrentTabBar",
       "getPlayingType",
-      "getCurrentSongList"
+      "getCurrentSongList",
+      "getLoadingFlag"
     ])
   },
 
@@ -86,7 +86,7 @@ export default {
 
     getSongId: {
       handler(value) {
-        this.isShowLoading = true;
+        this.asyncSetLoadingFlag(true)
         this.asyncSetCurrentTime(0);
         this.asyncSetPlayingState(false);
         this.getSongUrl(value);
@@ -103,14 +103,15 @@ export default {
       "asyncSetMusicUrl",
       "asyncOrderNextSong",
       "asyncRandomSong",
-      "asyncSetCurrentSong"
+      "asyncSetCurrentSong",
+      "asyncSetLoadingFlag"
     ]),
 
     canPlayThrough() {
       // Toast("能够播放了");
       this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
-      this.isShowLoading = false;
+      this.asyncSetLoadingFlag(false)
       console.log("加载结束");
     },
 

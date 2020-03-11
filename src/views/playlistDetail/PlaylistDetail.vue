@@ -78,13 +78,37 @@ export default {
     };
   },
 
-  activated() {
+  created() {
+    this.activeIndx = null;
     this.getPlaylistDetail(this.$route.query.id);
     this.isLoadingData = true;
   },
 
   computed: {
     ...mapGetters(["getSongId"])
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (from.path == "/palying") {
+      next(vm => {
+        let temArr = JSON.parse(
+          window.sessionStorage.getItem("playlistDetail")
+        );
+        vm.coverImgUrl = temArr.coverImgUrl;
+        vm.name = temArr.name;
+        vm.avatarUrl = temArr.creator.avatarUrl;
+        vm.nickname = temArr.creator.nickname;
+        vm.description = temArr.description;
+        vm.songList = temArr.tracks;
+      });
+      return;
+    }
+
+    next(vm => {
+      vm.activeIndx = null;
+      vm.getPlaylistDetail(vm.$route.query.id);
+      // vm.isLoadingData = true;
+    });
   },
 
   methods: {
@@ -94,6 +118,10 @@ export default {
     getPlaylistDetail(id) {
       request.getPlaylistDetail(id).then(res => {
         console.log(res);
+        window.sessionStorage.setItem(
+          "playlistDetail",
+          JSON.stringify(res.playlist)
+        );
         this.coverImgUrl = res.playlist.coverImgUrl;
         this.name = res.playlist.name;
         this.avatarUrl = res.playlist.creator.avatarUrl;

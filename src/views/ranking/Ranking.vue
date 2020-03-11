@@ -1,5 +1,5 @@
 <template>
-  <div class="ranking-warp">
+  <div class="ranking-warp" v-if="!getLoadingFlag">>
     <h5>排行榜单</h5>
     <div class="container">
       <div
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
+import { mapGetters,mapActions } from "vuex";
 import request from "@/api/index";
 export default {
   name: "Ranking",
@@ -32,27 +32,29 @@ export default {
   },
 
   created() {
+    this.asyncSetLoadingFlag(true)
     this.getRankingList();
     console.log("created");
   },
   activated() {
     this.asyncSetCurrentTabBar(2);
     console.log("activated");
-    this.rankingList = JSON.parse(window.sessionStorage.getItem("rankingList"));
   },
+
+  computed: {
+    ...mapGetters(["getLoadingFlag"])
+  },
+  
   methods: {
-    ...mapActions(["asyncSetCurrentTabBar"]),
+    ...mapActions(["asyncSetCurrentTabBar","asyncSetLoadingFlag"]),
 
     /**获取排行歌单 */
     getRankingList() {
       request.getRankingList().then(res => {
         console.log(res);
+        this.asyncSetLoadingFlag(false)
         if (res && res.code == 200) {
           this.rankingList = res.list;
-          window.sessionStorage.setItem(
-            "rankingList",
-            JSON.stringify(res.list)
-          );
         }
       });
     },
