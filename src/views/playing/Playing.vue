@@ -216,10 +216,12 @@ export default {
 
     /**点击列表 */
     handleShow() {
+      
       let temArr = JSON.parse(window.localStorage.getItem("historySongList"));
       console.log(Boolean(temArr))
       if (temArr) {
         this.historySongList = temArr;
+        console.log(this.historySongList,111111111)
       }
 
       this.isShow = !this.isShow;
@@ -272,6 +274,14 @@ export default {
 
     /**点击上一曲 */
     playingPrev() {
+      if(this.getCurrentSongList.length==0){
+        Toast('当前无播放')
+        return
+      }
+      if(this.getCurrentSongList.length==1){
+        Toast("当前列表只有一首，快去歌单添加吧")
+        return
+      }
       if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
         //顺序的上一曲
         this.asyncOrderPrevSong();
@@ -284,6 +294,14 @@ export default {
 
     /**点击下一曲 */
     playingNext() {
+      if(this.getCurrentSongList.length==0){
+        Toast('当前无播放')
+        return
+      }
+      if(this.getCurrentSongList.length==1){
+        Toast("当前列表只有一首，快去歌单添加吧")
+        return
+      }
       if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
         //顺序的下一曲
         this.asyncOrderNextSong();
@@ -328,6 +346,10 @@ export default {
 
     /**点击播放/暂停 */
     playing() {
+      if(!this.getMusicUrl){
+        Toast("当前无播放")
+        return
+      }
       this.asyncSetPlayingState(!this.getIsPlaying);
     },
 

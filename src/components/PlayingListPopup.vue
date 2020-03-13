@@ -27,7 +27,7 @@
                 <van-icon v-if="getSongId==item.id" class="activeInon" name="volume-o" />
                 <div class="left">
                   <p>{{item.name}}</p>
-                  <span>-&nbsp;{{item.ar[0].name}}</span>
+                  <span>-&nbsp;{{item.ar?item.ar[0].name:item.artists[0].name}}</span>
                 </div>
               </li>
               
@@ -52,7 +52,7 @@
                 <van-icon v-if="getSongId==item.id" class="activeInon" name="volume-o" />
                 <div class="left">
                   <p>{{item.name}}</p>
-                  <span>-&nbsp;{{item.ar[0].name}}</span>
+                  <span>-&nbsp;{{item.ar?item.ar[0].name:item.artists[0].name}}</span>
                 </div>
                 <van-icon @click.stop="deleteSong(index,item.id)" name="cross" />
               </li>

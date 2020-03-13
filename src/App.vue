@@ -104,7 +104,8 @@ export default {
       "asyncOrderNextSong",
       "asyncRandomSong",
       "asyncSetCurrentSong",
-      "asyncSetLoadingFlag"
+      "asyncSetLoadingFlag",
+      "asyncSetPlayingType"
     ]),
 
     canPlayThrough() {
@@ -133,6 +134,15 @@ export default {
 
       // let delayTiam = window.setTimeout(() => {
       // window.clearTimeout(delayTiam);
+      if(this.getCurrentSongList.length==1){
+        this.asyncSetPlayingType();
+        let time = window.setTimeout(()=>{
+          this.asyncSetPlayingState(true);
+          window.clearTimeout(time)
+        },2000)
+        
+        return
+      }
       if (this.getPlayingType.type == 0) {
         //顺序的下一曲
         this.asyncSetPlayingState(true);
@@ -192,7 +202,7 @@ export default {
 }
 
 .van-loading {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

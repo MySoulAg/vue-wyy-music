@@ -92,7 +92,7 @@
     >
       <van-icon @click="hiddenSearchPopup" class="popup-icon" name="arrow" />
       <ul>
-        <li @click="hanldeSearchList(item.id)" v-for="(item,index) in searchList" :key="index">
+        <li @click="hanldeSearchList(item)" v-for="(item,index) in searchList" :key="index">
           <p>{{item.name}}</p>
           <span>{{item.artists[0].name}}-{{item.album.name}}</span>
         </li>
@@ -151,12 +151,15 @@ export default {
     ...mapActions([
       "asyncSetCurrentTabBar",
       "asyncSetSongId",
-      "asyncSetLoadingFlag"
+      "asyncSetLoadingFlag",
+      "asyncSetCurrentSongList"
     ]),
 
     /**点击搜索结果列表 */
-    hanldeSearchList(id){
-      this.asyncSetSongId(id);
+    hanldeSearchList(item){
+      console.log(item)
+      this.asyncSetSongId(item.id);
+      this.asyncSetCurrentSongList(item);
       this.$router.push("/playing");
     },
 

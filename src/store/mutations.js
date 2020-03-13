@@ -35,7 +35,10 @@ export default {
     setCurrentSongList(state, currentSongList) {
         if (typeof currentSongList == 'number') {
             state.currentSongList.splice(currentSongList, 1)
-        } else {
+        } else if (Object.prototype.toString.call(currentSongList) == '[object Object]') {
+            console.log(currentSongList)
+            state.currentSongList.unshift(currentSongList)
+        } else if(Object.prototype.toString.call(currentSongList) == '[object Array]') {
             state.currentSongList = currentSongList
         }
 
