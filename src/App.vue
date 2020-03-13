@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       transitionName: "fade-left",
-      songUrl: "", //歌曲url
+      songUrl: "" //歌曲url
     };
   },
   computed: {
@@ -86,7 +86,7 @@ export default {
 
     getSongId: {
       handler(value) {
-        this.asyncSetLoadingFlag(true)
+        this.asyncSetLoadingFlag(true);
         this.asyncSetCurrentTime(0);
         this.asyncSetPlayingState(false);
         this.getSongUrl(value);
@@ -112,7 +112,7 @@ export default {
       // Toast("能够播放了");
       this.asyncSetPlayingState(true);
       this.$refs.audioRef.play();
-      this.asyncSetLoadingFlag(false)
+      this.asyncSetLoadingFlag(false);
       console.log("加载结束");
     },
 
@@ -134,14 +134,14 @@ export default {
 
       // let delayTiam = window.setTimeout(() => {
       // window.clearTimeout(delayTiam);
-      if(this.getCurrentSongList.length==1){
+      if (this.getCurrentSongList.length == 1) {
         this.asyncSetPlayingType();
-        let time = window.setTimeout(()=>{
+        let time = window.setTimeout(() => {
           this.asyncSetPlayingState(true);
-          window.clearTimeout(time)
-        },2000)
-        
-        return
+          window.clearTimeout(time);
+        }, 2000);
+
+        return;
       }
       if (this.getPlayingType.type == 0) {
         //顺序的下一曲
@@ -171,7 +171,21 @@ export default {
             }
           }
         } else {
+          if (this.getCurrentSongList.length == 1) {
+            Toast("该歌曲不可播放");
+            let time = window.setTimeout(() => {
+              window.clearTimeout(time);
+              // this.asyncSetSongId(null);
+              this.asyncSetLoadingFlag(false);
+              window.history.back(); //返回上一页
+              // this.$router.push('/recommend')
+            }, 2000);
+
+            return;
+          }
+
           Toast("该歌曲不可播放,已切换下一曲");
+
           // this.asyncSetMusicUrl(null)
           this.asyncSetCurrentSong(null);
           this.songUrl = "";

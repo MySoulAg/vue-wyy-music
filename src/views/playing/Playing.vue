@@ -12,7 +12,7 @@
           <div
             class="pic"
             :class="[getIsPlaying?'rotation':'',isShowLyrics?'opacity':'']"
-            :style="{ backgroundImage: 'url(' + picUrl + ')' }"
+            v-lazy:background-image="picUrl"
           ></div>
         </transition>
         <transition name="fade">
@@ -216,12 +216,11 @@ export default {
 
     /**点击列表 */
     handleShow() {
-      
       let temArr = JSON.parse(window.localStorage.getItem("historySongList"));
-      console.log(Boolean(temArr))
+      console.log(Boolean(temArr));
       if (temArr) {
         this.historySongList = temArr;
-        console.log(this.historySongList,111111111)
+        console.log(this.historySongList, 111111111);
       }
 
       this.isShow = !this.isShow;
@@ -274,13 +273,13 @@ export default {
 
     /**点击上一曲 */
     playingPrev() {
-      if(this.getCurrentSongList.length==0){
-        Toast('当前无播放')
-        return
+      if (this.getCurrentSongList.length == 0) {
+        Toast("当前无播放");
+        return;
       }
-      if(this.getCurrentSongList.length==1){
-        Toast("当前列表只有一首，快去歌单添加吧")
-        return
+      if (this.getCurrentSongList.length == 1) {
+        Toast("当前列表只有一首，快去歌单添加吧");
+        return;
       }
       if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
         //顺序的上一曲
@@ -294,13 +293,13 @@ export default {
 
     /**点击下一曲 */
     playingNext() {
-      if(this.getCurrentSongList.length==0){
-        Toast('当前无播放')
-        return
+      if (this.getCurrentSongList.length == 0) {
+        Toast("当前无播放");
+        return;
       }
-      if(this.getCurrentSongList.length==1){
-        Toast("当前列表只有一首，快去歌单添加吧")
-        return
+      if (this.getCurrentSongList.length == 1) {
+        Toast("当前列表只有一首，快去歌单添加吧");
+        return;
       }
       if (this.getPlayingType.type == 0 || this.getPlayingType.type == 1) {
         //顺序的下一曲
@@ -338,17 +337,19 @@ export default {
         console.log(res);
         this.authorName = res.songs[0].ar[0].name;
         this.musicName = res.songs[0].name;
-        this.picUrl = res.songs[0].al.picUrl + "?param=500y500";
-        this.bgcPicUrl = res.songs[0].al.picUrl + "?param=500y500";
+        // this.picUrl = res.songs[0].al.picUrl + "?param=500y500";
+        // this.bgcPicUrl = res.songs[0].al.picUrl + "?param=500y500";
+        this.picUrl = res.songs[0].al.picUrl;
+        this.bgcPicUrl = res.songs[0].al.picUrl;
         this.totalTime = Math.round(res.songs[0].dt / 1000);
       });
     },
 
     /**点击播放/暂停 */
     playing() {
-      if(!this.getMusicUrl){
-        Toast("当前无播放")
-        return
+      if (!this.getMusicUrl) {
+        Toast("当前无播放");
+        return;
       }
       this.asyncSetPlayingState(!this.getIsPlaying);
     },

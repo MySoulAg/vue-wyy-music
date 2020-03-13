@@ -98,7 +98,6 @@ export default {
     /**获取我的歌单 */
     getUserList(id) {
       request.getUserList(id).then(res => {
-        console.log(res);
         if (res && res.code == 200 && res.playlist.length != 0) {
           this.userList = res.playlist;
           this.avatarUrl = res.playlist[0].creator.avatarUrl;
@@ -115,7 +114,6 @@ export default {
 
     /**点击歌单 去歌单详情 */
     goPlaylistDetail(id) {
-      console.log(id);
       this.$router.push({ path: "playlistDetail", query: { id } });
     }
   }
