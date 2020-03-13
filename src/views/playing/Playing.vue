@@ -217,6 +217,7 @@ export default {
     /**点击列表 */
     handleShow() {
       let temArr = JSON.parse(window.localStorage.getItem("historySongList"));
+      console.log(Boolean(temArr))
       if (temArr) {
         this.historySongList = temArr;
       }

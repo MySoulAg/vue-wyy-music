@@ -127,6 +127,33 @@ export default {
             method: 'get',
             url: '/banner?type=2',
         })
+    },
+
+    /**获取热搜列表 */
+    getHot() {
+        return request({
+            method: 'get',
+            url: '/search/hot/detail',
+        })
+    },
+
+    /**获取默认搜索关键词 */
+    getSearchDefault() {
+        return request({
+            method: 'get',
+            url: '/search/default',
+        })
+    },
+
+    /**搜索 */
+    search(keywords) {
+        return request({
+            method: 'get',
+            url: '/search',
+            params: {
+                keywords
+            }
+        })
     }
 
 }

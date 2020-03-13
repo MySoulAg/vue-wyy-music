@@ -11,7 +11,7 @@ import './assets/icon/iconfont.css' //字体图标
 
 Vue.use(VueLazyload,{
   // error:require('@/assets/img/logo.png'),
-  loading:require('@/assets/img/loading.gif')
+  loading:require('@/assets/img/default.png')
 })
 
 
