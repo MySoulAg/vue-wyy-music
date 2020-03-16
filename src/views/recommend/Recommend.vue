@@ -30,7 +30,11 @@
           搜索历史
           <van-icon @click="clearHistorySearch" name="delete" />
         </h5>
-        <span @click="handleHistory(item)" v-for="(item,index) in historySerachList" :key="index">{{item}}</span>
+        <span
+          @click="handleHistory(item)"
+          v-for="(item,index) in historySerachList"
+          :key="index"
+        >{{item}}</span>
       </div>
       <div class="hot">
         <h5>热搜榜</h5>
@@ -156,15 +160,15 @@ export default {
     ]),
 
     /**点击搜索结果列表 */
-    hanldeSearchList(item){
-      console.log(item)
+    hanldeSearchList(item) {
+      console.log(item);
       this.asyncSetSongId(item.id);
       this.asyncSetCurrentSongList(item);
       this.$router.push("/playing");
     },
 
     /**点击搜索历史列表 */
-    handleHistory(item){
+    handleHistory(item) {
       this.keyWords = item;
       this.handleSearch();
     },
@@ -177,7 +181,7 @@ export default {
       })
         .then(() => {
           // on confirm
-          window.localStorage.clear("historySearchList");
+          window.localStorage.removeItem("historySearchList");
           this.historySerachList =
             JSON.parse(window.localStorage.getItem("historySearchList")) || [];
         })
@@ -240,6 +244,7 @@ export default {
     /**搜索 */
     handleSearch() {
       this.asyncSetLoadingFlag(true);
+      this.searchList = [];
       this.isShowPopup = true;
       request.search(this.keyWords || this.realkeyword).then(res => {
         console.log(res);
@@ -292,6 +297,7 @@ export default {
 
     /**点击取消 */
     handleCancle() {
+      this.keyWords = "";
       this.isShowInput = false;
       this.isShowPopup = false;
       this.$refs.inputBoxRef.style.width = "75%";
@@ -302,6 +308,7 @@ export default {
       if (item.targetType == 1) {
         //歌曲
         this.asyncSetSongId(item.song.id);
+        this.asyncSetCurrentSongList(item.song);
         this.$router.push("/playing");
       }
     },

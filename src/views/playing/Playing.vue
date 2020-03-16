@@ -124,7 +124,11 @@ export default {
       handler() {
         this.progressValue = 0;
         this.currentTime = 0;
-        this.$refs.ulRef.style.transform = `translateY(135px)`;
+        if(this.$refs.ulRef){
+          this.$refs.ulRef.style.transform = `translateY(135px)`;
+        }
+          
+        
         this.lyricArr = [];
         this.picUrl = "";
         this.musicName = "";

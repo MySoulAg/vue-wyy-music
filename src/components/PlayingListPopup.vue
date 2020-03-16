@@ -13,13 +13,14 @@
       <van-swipe ref="swipeRef" :loop="false" initial-swipe="1" indicator-color="#fff">
         <van-swipe-item>
           <div class="lastLis list-box">
-            <h5>历史播放
+            <h5>
+              历史播放
               <span>({{historySongList.length}})</span>
             </h5>
             <ul v-if="historySongList.length>0">
-
               <li
-                @click="playingSong(item.id)"
+                :ref="getSongId==item.id?'hisLiRef':''"
+                @click="playingHistorySong(item)"
                 :class="[getSongId==item.id?'active':'']"
                 v-for="item in historySongList"
                 :key="item.id"
@@ -30,7 +31,6 @@
                   <span>-&nbsp;{{item.ar?item.ar[0].name:item.artists[0].name}}</span>
                 </div>
               </li>
-              
             </ul>
             <div v-else class="noData">无历史播放，快去听听吧(つェ⊂)</div>
             <div class="button" @click="closePopup">关闭</div>
@@ -44,6 +44,7 @@
             </h5>
             <transition-group v-if="getCurrentSongList.length>0" name="list" tag="ul">
               <li
+                :ref="getSongId==item.id?'curLiRef':''"
                 @click="playingSong(item.id)"
                 :class="[getSongId==item.id?'active':'']"
                 v-for="(item,index) in getCurrentSongList"
@@ -81,15 +82,31 @@ export default {
       type: Boolean,
       default: false
     },
-    historySongList:{
-      type:Array,
-      default:()=>[]
+    historySongList: {
+      type: Array,
+      default: () => []
+    }
+  },
+
+  watch: {
+    isShow: {
+      handler(flag) {
+        if (flag) {
+          this.$nextTick(() => {
+            window.setTimeout(() => {
+              this.$refs.curLiRef[0].scrollIntoView(true);
+              if(this.$refs.hisLiRef){
+                this.$refs.hisLiRef[0].scrollIntoView(true);
+              }
+            }, 400);
+          });
+        }
+      }
     }
   },
 
   data() {
     return {
-      
       // historySongList:[],//历史播放列表
       overlayStyle: {
         backgroundColor: "transparent"
@@ -120,6 +137,12 @@ export default {
       this.asyncSetSongId(id);
     },
 
+    /**点击历史播放列表 */
+    playingHistorySong(item) {
+      this.asyncSetSongId(item.id);
+      this.asyncSetCurrentSongList(item);
+    },
+
     /**点击关闭弹出层 */
     closePopup() {
       this.$emit("update:isShow", false);
@@ -128,8 +151,7 @@ export default {
     /**弹出层关闭后触发 */
     closedPopup() {
       this.$refs.swipeRef.swipeTo(1);
-    },
-
+    }
   }
 };
 </script>
