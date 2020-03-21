@@ -154,6 +154,14 @@ export default {
                 keywords
             }
         })
-    }
+    },
+
+    // /**获取每日推荐 */
+    // getDailySong() {
+    //     return request({
+    //         method: 'get',
+    //         url: '/recommend/songs',
+    //     })
+    // }
 
 }

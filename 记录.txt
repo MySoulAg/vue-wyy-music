@@ -1,0 +1,13 @@
+TODO  校验 验证码是否正确
+
+
+
+
+
+<!-- 验证码输入框 -->
+      <van-password-input length="4" :mask="false" :gutter="0" :value="aptchaValue" :focused="showKeyboard" @focus="showKeyboard = true"/>
+      <van-number-keyboard
+        :show="showKeyboard"
+        @input="onInput"
+        @delete="onDelete"
+      />

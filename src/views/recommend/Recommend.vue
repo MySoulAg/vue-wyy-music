@@ -2,6 +2,10 @@
   <div class="recommend-warp">
     <div class="search-box">
       <div class="left">
+        <!-- <div class="day" @click="goPlaylistDetail(null,true)" v-show="!isShowInput">
+          <span>每日</span>
+          <span>推荐</span>
+        </div> -->
         <div ref="inputBoxRef" class="input" @click="handleInput">
           <van-icon name="search" />
           <span v-show="!isShowInput">{{realkeyword}}</span>
@@ -15,8 +19,9 @@
           />
         </div>
       </div>
-
+      
       <div class="right">
+        <!-- <div class="sousuo" @click="handleSearch" v-show="!isShowInput">搜索</div> -->
         <transition name="slide-fade">
           <div @click="handleCancle" v-show="isShowInput" class="button">取消</div>
         </transition>
@@ -72,7 +77,7 @@
     <h5>精选歌单</h5>
     <div class="container">
       <div
-        @click="goPlaylistDetail(item.id)"
+        @click="goPlaylistDetail(item.id,false)"
         class="item"
         v-for="(item,index) in recommendedList"
         :key="index"
@@ -263,6 +268,12 @@ export default {
         console.log(res);
         this.realkeyword = res.data.realkeyword;
       });
+      window.setInterval(() => {
+        request.getSearchDefault().then(res => {
+          console.log(res);
+          this.realkeyword = res.data.realkeyword;
+        });
+      }, 120000);
     },
 
     /**icon处理 */
@@ -333,9 +344,9 @@ export default {
     },
 
     /**点击歌单 去歌单详情 */
-    goPlaylistDetail(id) {
+    goPlaylistDetail(id,flag) {
       console.log(id);
-      this.$router.push({ path: "playlistDetail", query: { id } });
+      this.$router.push({ path: "playlistDetail", query: { id ,flag} });
     }
   }
 };
@@ -362,6 +373,28 @@ export default {
       width: 80%;
       display: flex;
       justify-content: flex-end;
+      position: relative;
+
+      .day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: #f5f5f5;
+        color: #999;
+        padding: 0 6px;
+        position: absolute;
+        left: 10px;
+        top: 0;
+        height: 100%;
+
+        span {
+          font-size: 12px;
+          line-height: 12px;
+        }
+      }
+
       .input {
         display: flex;
         align-items: center;
@@ -397,6 +430,22 @@ export default {
 
     .right {
       width: 20%;
+      position: relative;
+      height: 35px;
+      .sousuo {
+        background-color: #f5f5f5;
+        display: inline-block;
+        color: #999;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 50%;
+        padding: 0 6px;
+        font-size: 12px;
+        position: absolute;
+        top: 0px;
+        left: 22px;
+
+      }
       .button {
         color: #333;
         font-size: 15px;
@@ -404,6 +453,8 @@ export default {
         // position: absolute;
         text-align: center;
         right: 20px;
+        height: 100%;
+        line-height: 35px;
       }
     }
   }

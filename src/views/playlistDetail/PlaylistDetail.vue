@@ -112,7 +112,17 @@ export default {
 
     next(vm => {
       vm.activeIndx = null;
+      vm.isLoadingData = true;
       /**获取歌单详情 */
+      
+      // if(vm.$route.query.flag){
+      //   console.log("每日推荐")
+      //   /**获取每日推荐 */
+      //   request.getDailySong().then(res=>{
+      //     console.log(res)
+      //   })
+      //   return
+      // }
       request.getPlaylistDetail(vm.$route.query.id).then(res => {
         console.log(res);
         vm.coverImgUrl = res.playlist.coverImgUrl;
@@ -132,7 +142,7 @@ export default {
           JSON.stringify(res.playlist)
         );
       });
-      vm.isLoadingData = true;
+      
     });
   },
 
