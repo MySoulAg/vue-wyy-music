@@ -7,8 +7,6 @@ import VueLazyload from 'vue-lazyload'
 
 import './utils/rem'
 
-// 这里添加一个测试commit的注释
-
 import './assets/icon/iconfont.css' //字体图标
 
 Vue.use(VueLazyload,{
